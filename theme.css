@@ -75,12 +75,13 @@ d-appendix {
 
 .navbar {
   background-color: #E0EEEE;
+  color: #333;
 }
 
 .navbar a {
   font-family: "Arial", sans-serif;
   color: black;
-  font-size: 16px;
+  font-size: 24px;
 }
 
 .navbar a:hover {
