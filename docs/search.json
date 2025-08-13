@@ -5,8 +5,8 @@
       "title": "About this site",
       "description": "Some additional details about the website",
       "author": [],
-      "contents": "\nKylie Alberts\nI am originally from the San Francisco Bay Area. I obtained my B.S. in Neurscience at Union College, NY. At Union, I also minored in Data Analytics and German. I am a current Ph.D. Candidate at UCLA in Psychology where I study older adults’ susceptibility to falling for scams and fraud. I recently interned at American AgCredit as their 2025 Data Science Intern. Upon graduation, I hope to pursue a career in Data Science so I can discover insights through data and code everyday! In my free time, I love to explore National Parks, read books, and go to concerts.\n\n\n\n",
-      "last_modified": "2025-08-13T14:18:44-07:00"
+      "contents": "\nKylie Alberts\n!(/images/231130_PSY_0084.jpg)\nI am originally from the San Francisco Bay Area. I obtained my B.S. in Neurscience at Union College, NY. At Union, I also minored in Data Analytics and German. I am a current Ph.D. Candidate at UCLA in Psychology where I study older adults’ susceptibility to falling for scams and fraud. I recently interned at American AgCredit as their 2025 Data Science Intern. Upon graduation, I hope to pursue a career in Data Science so I can discover insights through data and code everyday! In my free time, I love to explore National Parks, read books, and go to concerts.\n\n\n\n",
+      "last_modified": "2025-08-13T15:16:04-07:00"
     },
     {
       "path": "index.html",
@@ -14,7 +14,7 @@
       "description": "Welcome to the website. I hope you enjoy it!\n",
       "author": [],
       "contents": "\n\n\n\n",
-      "last_modified": "2025-08-13T13:38:11-07:00"
+      "last_modified": "2025-08-13T15:15:48-07:00"
     },
     {
       "path": "projects.html",
@@ -22,7 +22,7 @@
       "author": [],
       "date": "2025-08-13",
       "contents": "\n\n\n\n\n\n\n\n\nMy Website\n\n\nHome\nAbout\nResume\nData Science Projects\nPublished Articles\n☰\n\n\n  \n    \n      \n        \n        \n        \n      \n      \n    \n    \n      \n  Home\n\n\n  About\n\n\n  Resume\n\n\n  Data Science Projects\n\n\n  Published Articles\n\n      \n  \n\n\n\n\n\n\nprojects\n2025-08-13\n\n\n\n\n\nR Markdown\nThis is an R Markdown document. Markdown is a simple formatting\nsyntax for authoring HTML, PDF, and MS Word documents. For more details\non using R Markdown see http://rmarkdown.rstudio.com.\nWhen you click the Knit button a document will be\ngenerated that includes both content as well as the output of any\nembedded R code chunks within the document. You can embed an R code\nchunk like this:\nsummary(cars)\n##      speed           dist       \n##  Min.   : 4.0   Min.   :  2.00  \n##  1st Qu.:12.0   1st Qu.: 26.00  \n##  Median :15.0   Median : 36.00  \n##  Mean   :15.4   Mean   : 42.98  \n##  3rd Qu.:19.0   3rd Qu.: 56.00  \n##  Max.   :25.0   Max.   :120.00\n\n\nIncluding Plots\nYou can also embed plots, for example:\n\nNote that the echo = FALSE parameter was added to the\ncode chunk to prevent printing of the R code that generated the\nplot.\n\n\n\n\n\n\n\n\n\n\n\n",
-      "last_modified": "2025-08-13T14:18:31-07:00"
+      "last_modified": "2025-08-13T15:16:50-07:00"
     },
     {
       "path": "publish_articles.html",
@@ -30,7 +30,7 @@
       "author": [],
       "date": "2025-08-13",
       "contents": "\n\n\n\n\n\n\n\n\nMy Website\n\n\nHome\nAbout\nResume\nData Science Projects\nPublished Articles\n☰\n\n\n  \n    \n      \n        \n        \n        \n      \n      \n    \n    \n      \n  Home\n\n\n  About\n\n\n  Resume\n\n\n  Data Science Projects\n\n\n  Published Articles\n\n      \n  \n\n\n\n\n\n\npublish_articles\n2025-08-13\n\n\n\n\n\nR Markdown\nThis is an R Markdown document. Markdown is a simple formatting\nsyntax for authoring HTML, PDF, and MS Word documents. For more details\non using R Markdown see http://rmarkdown.rstudio.com.\nWhen you click the Knit button a document will be\ngenerated that includes both content as well as the output of any\nembedded R code chunks within the document. You can embed an R code\nchunk like this:\nsummary(cars)\n##      speed           dist       \n##  Min.   : 4.0   Min.   :  2.00  \n##  1st Qu.:12.0   1st Qu.: 26.00  \n##  Median :15.0   Median : 36.00  \n##  Mean   :15.4   Mean   : 42.98  \n##  3rd Qu.:19.0   3rd Qu.: 56.00  \n##  Max.   :25.0   Max.   :120.00\n\n\nIncluding Plots\nYou can also embed plots, for example:\n\nNote that the echo = FALSE parameter was added to the\ncode chunk to prevent printing of the R code that generated the\nplot.\n\n\n\n\n\n\n\n\n\n\n\n",
-      "last_modified": "2025-08-13T14:18:22-07:00"
+      "last_modified": "2025-08-13T15:16:36-07:00"
     },
     {
       "path": "resume.html",
@@ -38,7 +38,7 @@
       "author": [],
       "date": "2025-08-13",
       "contents": "\n\n\n\n\n\n\n\n\nMy Website\n\n\nHome\nAbout\nResume\nData Science Projects\nPublished Articles\n☰\n\n\n  \n    \n      \n        \n        \n        \n      \n      \n    \n    \n      \n  Home\n\n\n  About\n\n\n  Resume\n\n\n  Data Science Projects\n\n\n  Published Articles\n\n      \n  \n\n\n\n\n\n\nresume\n2025-08-13\n\n\n\n\n\nR Markdown\nThis is an R Markdown document. Markdown is a simple formatting\nsyntax for authoring HTML, PDF, and MS Word documents. For more details\non using R Markdown see http://rmarkdown.rstudio.com.\nWhen you click the Knit button a document will be\ngenerated that includes both content as well as the output of any\nembedded R code chunks within the document. You can embed an R code\nchunk like this:\nsummary(cars)\n##      speed           dist       \n##  Min.   : 4.0   Min.   :  2.00  \n##  1st Qu.:12.0   1st Qu.: 26.00  \n##  Median :15.0   Median : 36.00  \n##  Mean   :15.4   Mean   : 42.98  \n##  3rd Qu.:19.0   3rd Qu.: 56.00  \n##  Max.   :25.0   Max.   :120.00\n\n\nIncluding Plots\nYou can also embed plots, for example:\n\nNote that the echo = FALSE parameter was added to the\ncode chunk to prevent printing of the R code that generated the\nplot.\n\n\n\n\n\n\n\n\n\n\n\n",
-      "last_modified": "2025-08-13T14:19:08-07:00"
+      "last_modified": "2025-08-13T15:16:21-07:00"
     }
   ],
   "collections": []
