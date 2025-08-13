@@ -1,6 +1,9 @@
 ---
 title: "publish_articles"
-output: html_document
+output: 
+  html_document:
+    theme: null
+    css: theme.css
 date: "2025-08-13"
 ---
 

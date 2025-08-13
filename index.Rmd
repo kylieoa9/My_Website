@@ -3,6 +3,10 @@ title: "My Website"
 description: |
   Welcome to the website. I hope you enjoy it!
 site: distill::distill_website
+output: 
+  html_document:
+    theme: null
+    css: theme.css
 ---
   
 
