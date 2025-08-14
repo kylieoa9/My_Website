@@ -17,4 +17,4 @@ navbar:
       href: publish_articles.html
 output: 
   distill::distill_article:
-    css: theme.css
+    css: styles.css
