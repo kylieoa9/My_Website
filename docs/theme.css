@@ -62,8 +62,8 @@ d-appendix {
   --title-size:       18px;
   --text-color:       rgba(255, 255, 255, 0.8);
   --text-size:        15px;
-  --hover-color:      white;
-  --bkgd-color:       #0F2E3D;
+  --hover-color:      #333;
+  --bkgd-color:       #E0EEEE;
 }
 
 .distill-site-footer {
@@ -79,8 +79,8 @@ d-appendix {
 
 .navbar a {
   font-family: "Arial", sans-serif;
-  color: black;
-  font-size: 24px;
+  color: #0F2E3D;
+  font-size: 36px;
 }
 
 .navbar a:hover {

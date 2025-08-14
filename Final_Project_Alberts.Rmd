@@ -1,0 +1,751 @@
+---
+title: "California Droughts and Fires"
+output: 
+  html_document:
+    theme: null
+    css: theme.css
+---
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+library(tidyverse)
+library(ggpubr)
+library(plotly)
+library(patchwork)
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+#Loading in the data
+ca_fires_data<- read.csv("./Docs/Data/ca-fire-incidents.csv")
+
+drought_data <- read.csv("./Docs/Data/Drought_index.csv") #Loading in the data files
+
+precip_data <- read_csv("https://stahlm.github.io/ENS_215/Data/NOAA_State_Precip_LabData.csv")
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+splitted <- t(sapply(drought_data$Date, function(x) substring(x, first=c(1,5), last=c(4,6))))
+drought_data<- cbind(splitted, drought_data) #seperating Date column into year and month in drought data
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+colnames(drought_data) <- c("Year", "Month", "Date", "Value", "Drought_index") 
+#changing the column names in drought data
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+colnames(ca_fires_data) <- c("Year", "number_of_fires", "acres_burned", "dollar_damage") 
+#changing the column names in california fires data
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+#Trimming precip data 
+precip_data <- precip_data %>%
+  filter(state_cd == "CA")
+
+#turning monthly data into yearly data
+yearly_precip <- precip_data %>% 
+  group_by(Year) %>% 
+  summarize(Avg_precip = mean(Precip_inches))
+
+yearly_precip$Year <- as.factor(yearly_precip$Year)
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+#Merging the three dataframes
+
+ca_fires_data$Year <- as.factor(ca_fires_data$Year) 
+#Changing the year column from California fires into a factor to make it the same class as the Drought index Year column so I can join the two columns into one data framw 
+
+fire_drought <- right_join(drought_data, ca_fires_data, by = "Year") 
+#Joining the drought data and the california fires data together
+
+#Joining the precipitation data and the rest of the data together
+fire_drought <- right_join(yearly_precip, fire_drought, by = "Year")
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+fire_drought <- fire_drought %>% 
+  mutate(Year = as.numeric(Year))
+#changing the Year column into a numeric so it is easier to make graphs later 
+```
+
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+acres_burned_years <- fire_drought %>% 
+  ggplot(aes(x=Year, 
+             y = acres_burned))+
+  geom_point() +
+  geom_smooth(method = "loess", color = "red", fill = NA)+
+  theme_bw()+
+  labs(title="Total Acres Burned",
+        x ="Year", y = "Acres Burned")
+
+#Making the graph comparing the Number of Fires over the years
+
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+precip_years <- fire_drought %>% 
+  ggplot(aes(x=Year, 
+             y = Avg_precip))+
+  geom_point() +
+  geom_smooth(method = "loess", color = "blue", fill = NA)+
+  theme_bw()+
+  labs(title="Average Precipitation",
+        x ="Year", y = "Average Precipitation (inches)")
+#Making the graph comparing the Number of Fires over the years
+
+
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+Drought_Severity_year_dot<- fire_drought %>% 
+  ggplot(aes(x=Year, 
+             y = Drought_index))+
+  geom_point()+
+  geom_smooth(method = "loess", fill = NA)+
+  theme_bw()+
+  labs(title="Departure from Drought Severity Index between 1933 to 2016",
+        x ="Year", y = "Departure from Drought Severity Index")
+#Making graph looking at Drought Severity Index between 1933 and 2016 
+
+#Drought_Severity_year_dot
+```
+
+
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+drought_severity_bar<-fire_drought %>% 
+  ggplot(aes(x=Year, y = Drought_index))+
+  geom_col(fill = ifelse(fire_drought$Drought_index < 0,'#CC0000','#004C99'))+
+  theme_bw()+
+  labs(title= "Departure from Drought Severity Index from 1933 to 2016",
+       x = "Year",
+       y = "Drought Severity Index")
+#Making graph looking at Drought Severity Index between 1933 and 2016 
+interactive_drought_severity_bar<- ggplotly(drought_severity_bar)
+#interactive_drought_severity_bar
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+fire_drought<- fire_drought %>% 
+  mutate(DI_lastyear = lag(Drought_index),
+         DI_2years = lag(Drought_index, n = 2),
+         DI_3years = lag(Drought_index, n = 3),
+         DI_4years = lag(Drought_index, n = 4),
+         DI_5years = lag(Drought_index, n = 5),
+         DI_6years = lag(Drought_index, n = 6),
+         DI_7years = lag(Drought_index, n = 7)) #Lagging the drought index of the data
+```
+
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+same_year<- fire_drought %>% 
+  ggplot(aes(x=acres_burned, 
+             y = Drought_index))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(method = "lm", fill = NA, color = "red")+
+  labs(x= "Acres Burned", 
+       y = "None")
+#Making graph looking at Drought Severity Index and number of fires   
+```
+
+```{r echo=FALSE, warning = FALSE, message=FALSE}
+one_year<- fire_drought %>% 
+  ggplot(aes(x=acres_burned, 
+             y = DI_lastyear))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(method = "lm", fill = NA, color = "red")+
+  labs(x= "Acres Burned", 
+       y = "One Year")
+#Making graph looking at Drought Severity Index from last year and number of fires  
+
+```
+
+```{r echo=FALSE, warning = FALSE, message=FALSE}
+two_years<-fire_drought %>% 
+  ggplot(aes(x=acres_burned, 
+             y = DI_2years))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(method = "lm", fill=NA, color = "red")+
+  labs(x= "Acres Burned", 
+       y = "Two Years")
+#Making graph looking at Drought Severity Index from two years ago and number of fires
+
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+three_years<- fire_drought %>% 
+  ggplot(aes(x=acres_burned, 
+             y = DI_3years))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(method = "lm", fill = NA, color = "red")+
+  labs(x= "Acres Burned", 
+       y = "Three Years")
+#Making graph looking at Drought Severity Index from three years ago and number of fires 
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+four_years<-fire_drought %>% 
+  ggplot(aes(x=acres_burned, 
+             y = DI_4years))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(method = "lm", fill = NA, color = "red")+
+  labs(x= "Acres Burned", 
+       y = "Four Years")
+#Making graph looking at Drought Severity Index from four years ago and number of fires 
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+five_years<-fire_drought %>% 
+  ggplot(aes(x=acres_burned, 
+             y = DI_5years))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(method = "lm", fill = NA, color = "red")+
+  labs(x= "Acres Burned", 
+       y = "Five Years")
+#Making graph looking at Drought Severity Index from five years ago and number of fires 
+```
+
+
+```{r echo=FALSE, warning = FALSE, message=FALSE}
+acres_burned_lag<- (same_year +one_year + two_years + three_years + four_years + five_years) +
+  plot_annotation(title = 'Acres Burned and Drought Severity Index with Lag')
+
+#acres_burned_lag
+#making the graphs be on one panel
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+fire_drought %>% 
+  summarise_at(vars(number_of_fires), funs(mean, sd, p25 = quantile(.,probs = 0.25), p50 = median, p75= quantile(.,probs = 0.75)))
+  #finding the quantiles of the number of fires
+#not used in final reports
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+fire_drought<- fire_drought %>% 
+  mutate(num_fire_cat = case_when(number_of_fires > 6735 ~ "Large amount of fires", 
+                                           number_of_fires > 3011.5 & number_of_fires <= 6735 ~ "Middle amount of fires", 
+                                           number_of_fires <= 3011.5 ~ "Small Amount of Fires"))
+#not used in final report: create categories by levels of fires
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+number_of_fires_drought_boxplot<- fire_drought %>% 
+  ggplot(aes(x = num_fire_cat, y = Drought_index)) + 
+  geom_boxplot() +
+  theme_bw()+
+  geom_jitter(alpha=0.5, color = "red")+
+  labs(x= "Number of Fires in a given year", 
+       y = "Drought Index",
+       title = "Number of Fires and Drought Index")
+#number_of_fires_drought_boxplot
+#not used in final report
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+fire_drought<- fire_drought %>% 
+  mutate(drought_cat = case_when(Drought_index > 0 ~ "No Drought", 
+                                           Drought_index < 0 ~ "Drought"))
+#creating drought categories
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+precip_raster<- precip_data %>% 
+  ggplot(aes(y = factor(Month), x = Year))+
+  geom_tile(aes(fill = percent_rank(Precip_inches)), color = "black")+
+  scale_fill_gradient2(low = "red", mid = "white", high = "blue", midpoint = 0.5)+
+  coord_equal()+
+  theme_classic()+
+  labs(y = "Month", 
+       fill = "Precipitation (inch)",
+       title = "Precipitation in California")
+
+#precip_raster
+#not used in final report
+```
+
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+fire_drought<- fire_drought %>% 
+  mutate(P_lastyear = lag(Avg_precip),
+         P_2years = lag(Avg_precip, n = 2),
+         P_3years = lag(Avg_precip, n = 3),
+         P_4years = lag(Avg_precip, n = 4),
+         P_5years = lag(Avg_precip, n = 5),
+         P_6years = lag(Avg_precip, n = 6),
+         P_7years = lag(Avg_precip, n = 7)) #Lagging the precipitation of the data
+```
+
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+p_same_year<- fire_drought %>% 
+  ggplot(aes(x=acres_burned, 
+             y = Avg_precip))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(method = "loess", fill = NA)+
+  labs(x= "Acres Burned", 
+       y = "Same Year")
+#Making graph looking at Precipitation and number of fires
+#not used in final report
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+p_last_year<- fire_drought %>% 
+  ggplot(aes(x=acres_burned, 
+             y = P_lastyear))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(method = "loess", fill = NA)+
+  labs(x= "Acres Burned", 
+       y = "Last Year")
+#Making graph looking at Precipitation and number of fires
+#not used in final report
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+p_2_year<- fire_drought %>% 
+  ggplot(aes(x=acres_burned, 
+             y = P_2years))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(method = "loess", fill = NA)+
+  labs(x= "Acres Burned", 
+       y = "Two Years")
+#Making graph looking at Precipitation and number of fires
+#not used in final report
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+p_3_year<- fire_drought %>% 
+  ggplot(aes(x=acres_burned, 
+             y = P_3years))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(method = "loess", fill = NA)+
+  labs(x= "Acres Burned", 
+       y = "Three Years")
+#Making graph looking at Precipitation and number of fires
+#not used in final report
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+p_4_year<- fire_drought %>% 
+  ggplot(aes(x=acres_burned, 
+             y = P_4years))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(method = "loess", fill = NA)+
+  labs(x= "Acres Burned", 
+       y = "Four Years")
+#Making graph looking at Precipitation and number of fires
+#not used in final report
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+p_5_year<- fire_drought %>% 
+  ggplot(aes(x=acres_burned, 
+             y = P_5years))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(method = "loess", fill = NA)+
+  labs(x= "Acres Burned", 
+       y = "Five Years")
+#Making graph looking at Precipitation and number of fires
+#not used in final report
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+p_6_year<- fire_drought %>% 
+  ggplot(aes(x=acres_burned, 
+             y = P_6years))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(method = "loess", fill = NA)+
+  labs(x= "Acres Burned", 
+       y = "Six Years")
+#Making graph looking at Precipitation and number of fires
+#not used in final report
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+p_7_year<- fire_drought %>% 
+  ggplot(aes(x=acres_burned, 
+             y = P_7years))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(method = "loess", fill = NA)+
+  labs(x= "Acres Burned", 
+       y = "Seven Years")
+#Making graph looking at Precipitation and number of fires
+#not used in final report
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+#Precipitation and lag arranged
+#ggarrange(p_same_year, p_last_year, p_2_year, p_3_year, p_4_year, p_5_year, p_6_year, p_7_year, nrow = 3, ncol= 3)
+#making the graphs be on one panel
+#not used in final report
+```
+
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+library(tidyverse)
+library(patchwork)
+library(readxl)
+#loading in packages to make maps
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+map_data_usa <- map_data("state")
+
+CA_map_data <- map_data_usa %>% 
+  filter(region == "california")
+#filter map data so it is only california
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+fire_drought_decades<- fire_drought %>% 
+  mutate(Decades = case_when(Year >= 1930 & Year < 1940 ~ "1930's", 
+                              Year >= 1940 & Year < 1950 ~ "1940's", 
+                              Year >= 1950 & Year < 1960 ~ "1950's",
+                              Year >= 1960 & Year < 1970 ~ "1960's",
+                             Year >= 1970 & Year < 1980 ~ "1970's",
+                             Year >= 1980 & Year < 1990 ~ "1980's",
+                             Year >= 1990 & Year < 2000 ~ "1990's",
+                             Year >= 2000 & Year < 2010 ~ "2000's",
+                             Year >= 2010 & Year < 2020 ~ "2010's")) %>%
+  group_by(Decades) %>% 
+  summarize(mean_acres_burned = mean(acres_burned),
+            mean_precip = mean(Avg_precip),
+            mean_dollar_damage= mean(dollar_damage),
+            mean_drought_index = mean(Drought_index))
+#make categories of decades and summarizing the data
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+fire_drought_decades <- fire_drought_decades %>% 
+  mutate(region = if_else(mean_precip > 0, "california", "NA"))
+
+#make a region column in order to join map_data and fire_drought
+
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+mapping_dataframe_decades <- left_join(CA_map_data, fire_drought_decades)
+
+#Join map_Data and fire_drought
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+acres_burned_decades_map<- mapping_dataframe_decades %>% 
+  ggplot() +
+  geom_polygon(aes(long, lat, group = group, fill = mean_acres_burned), color = "black") +
+  scale_color_gradient(low = "blue", high = "red") +
+  labs(title = "Average Acres Burned For Each Decade",
+       subtitle = "Data from 1933 to 2016") +
+  scale_fill_gradient(low = "blue", high = "red") +
+  theme_void() +
+  labs(fill = "Acres Burned") +
+  coord_quickmap() +
+  facet_wrap(~Decades)
+#acres burned, seperated by map decades
+#need to change to average precipitation
+#acres_burned_decades_map
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+precip_decades_map<- mapping_dataframe_decades %>% 
+  ggplot() +
+  geom_polygon(aes(long, lat, group = group, fill = mean_precip), color = "black") +
+  scale_color_gradient(low = "blue", high = "red") +
+  labs(title = "Average Precipitation for Each Decade",
+       subtitle = "Data from 1933 to 2016") +
+  scale_fill_gradient(low = "red", high = "blue") +
+  theme_void() +
+  labs(fill = "Precipitation") +
+  coord_quickmap() +
+  facet_wrap(~Decades)
+
+#precipitation, seperated by map decades
+
+#precip_decades_map
+#need this to be capped at 0 and it needs to be average precipitation
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+dollar_damage_decade_map <- mapping_dataframe_decades %>% 
+  ggplot() +
+  geom_polygon(aes(long, lat, group = group, fill = mean_dollar_damage), color = "black") +
+  scale_color_gradient(low = "blue", high = "red") +
+  labs(title = "Average Dollar Damage from Fires for Each Decade",
+       subtitle = "Data from 1933 to 2016") +
+  scale_fill_gradient(low = "blue", high = "red") +
+  theme_void() +
+  labs(fill = "Dollars Damage") +
+  coord_quickmap() +
+  facet_wrap(~Decades)
+
+#dollar_damage_decade_map
+#dollar damage, seperated by map decades
+```
+
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+drought_index_decade_map <- mapping_dataframe_decades %>% 
+  ggplot() +
+  geom_polygon(aes(long, lat, group = group, fill = mean_drought_index), color = "black") +
+  scale_color_gradient(low = "red", high = "blue") +
+  labs(title = "Average Drought Index for Each Decade",
+       subtitle = "Data from 1933 to 2016") +
+  scale_fill_gradient(low = "red", high = "blue") +
+  theme_void() +
+  labs(fill = "Drought Index") +
+  coord_quickmap() +
+  facet_wrap(~Decades)
+
+#drought_index_decade_map
+#drought index, seperated by map decade
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+years2010_2016<-fire_drought %>% 
+  filter(Year %in% c(2010, 2011, 2012,2013,2014,2015,2016)) %>% 
+  ggplot(aes(x=Year, 
+             y = Avg_precip))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(color = "lightblue", se = F)+
+  labs(x= "Year", 
+       y = "Average Precipitation")
+
+#creating dot plot for years between 2010 and 2016
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+years2010_2016_fire<-fire_drought %>% filter(Year %in% c(2010, 2011, 2012,2013,2014,2015,2016)) %>% 
+  ggplot(aes(x=Year, 
+             y = acres_burned))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(color = "#FF6666", se = F)+
+  labs(x= "Year", 
+       y = "Acres Burned")
+
+#creating dot plot for years between 2010 and 2016 for fire
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+drought_fire_2010_2016 <- (years2010_2016/years2010_2016_fire)+plot_annotation(title = 'Total Acres Burned and Average Precipitation 2010-2016')
+#joining two plots
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+years1974_1979<-fire_drought %>% filter(Year %in% c(1974, 1975, 1976,1977,1978,1979)) %>% 
+  ggplot(aes(x=Year, 
+             y = Avg_precip))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(color = "lightblue", se =F)+
+  labs(x= "Year", 
+       y = "Average Precipitation")
+
+years1974_1979_fire<-fire_drought %>% filter(Year %in% c(1974, 1975, 1976,1977,1978,1979)) %>% 
+  ggplot(aes(x=Year, 
+             y = acres_burned))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(color = "#FF6666", se = F)+
+  labs(x= "Year", 
+       y = "Acres Burned")
+
+#dotplot for years 1974-1979 and fire, joining graphs together
+
+drought_fire_1974_1979<-(years1974_1979/years1974_1979_fire) + plot_annotation(title = 'Total Acres Burned and Average Precipitation 1974-1979')
+```
+
+```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+years1985_1994<-fire_drought %>% filter(Year %in% c(1985, 1986, 1987,1988,1989,1990, 1991,1992,1993,1994)) %>% 
+  ggplot(aes(x=Year, 
+             y = Avg_precip))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(color = "lightblue", se = F)+
+  labs(x= "Year", 
+       y = "Average Precipitation")
+
+years1985_1994_fire<-fire_drought %>% filter(Year %in% c(1985, 1986, 1987,1988,1989,1990, 1991,1992,1993,1994)) %>% 
+  ggplot(aes(x=Year, 
+             y = acres_burned))+
+  geom_point()+
+  theme_bw() +
+  geom_smooth(color = "#FF6666", se = F)+
+  labs(x= "Year", 
+       y = "Acres Burned")
+
+#dotplot for years 1985-1994 and fire, joining graphs together
+
+drought_fire_1985_1994 <- (years1985_1994/years1985_1994_fire)+plot_annotation(title = 'Total Acres Burned and Average Precipitation 1984-1994')
+```
+
+
+
+!["California Fire"](01_california_wildfires_cranstonfire_nighttime_sp_002.adapt.1900.1.jpg)
+
+## Introduction
+
+  California has always been known for its sunny skies and beautiful beaches all year round. However in more recent years, California has become known for its lack of rainfall leading to an excessively dry climate and increase in wildfires. These dry conditions have been a result of anthropogenic climate change that has been occuring around the globe for many years (“Climate Science Special Report: Droughts, Floods, and Wildfire”). 
+  
+  California's wildfires have increased by 500% due to climate change (Meyer). Severity of wildfires are influenced by a number of different factors including temperature, soil moisture, relative humidity, wind speed, and vegetation (“Climate Science Special Report: Droughts, Floods, and Wildfire”). 
+  
+  Drought has a major impact on the factors stated above. "Drought is a temporary reduction in water availability below normal quantities (Lund)." Droughts can last for weeks, months, or even years. Drought is categorized using the Palmer Drought Severity Index (PDSI). This index takes into account  temperature and precipitation in order to estimate relative dryness in a particular area (“Palmer Drought Severity Index (PDSI)”). This index ranges on a scale from -10, meaning very dry, and 10, meaning very wet. If a region has an average index of below a zero, then that region is considered to be in a drought.
+  
+  
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+interactive_drought_severity_bar
+```
+
+  The figure above shows the PDSI for California between 1933 and 2016. As demonstrated by the figure, California has experienced several spans of droughts that have lasted multiple years each. 
+  
+  Being from California, I have experienced first hand the effects of the 2012-2014 drought and have seen the significant impact it had on the amount and duration of fires in California. So in this project, I wanted to research whether drought has an impact on fires in California. I hypothesize that there will be a relationship between the yearly severity of the drought index and the total acres burned in California each year. I also hypothesize that California will have less overall precipitation in the most recent decades due to climate change. I also predict there will be an increase in the severity of droughts and fires in more recent decades. These effects are also likely to show an increase in annual dollar damage due to fires. 
+  
+  I also plan to explore the number and severity of fires for years that were reported as some of California's most extreme droughts in history. These reports include the two-year drought between 1976-1977, the six year drought between 1987-1992 and the three year drought between 2012 and 2014 (California's Most Significant Droughts: Comparing Historical and Recent Years).
+
+  
+!["California Drought Impact"](102745938-drought.jpg)  
+  
+## Methods
+
+  California drought data was gathered from the National Oceanic and Atmospheric Administration (NOAA) website. This data included the drought severity index and the years the index covered between 1985 and 2019. California wildfire data was collected from Github. This data included the yearly recordings of total number of fires, dollar damage, and acres burned between 1933 and 2016. California precipitation data also was collected from Github. This data included total precipitation (in inches) for each month for the years between 1895 and 2017. Due to constraints of the wildfire data, all analyses were conducted between 1933 and 2016.
+  
+  I started by looking at various patterns including the total acres burned, average precipitation, and drought severity over time. I also compared the differences between acres burned and drought index where the drought index lagged between 0-7 years to see if drought has a delayed impact on fire severity. I also looked at the average acres burned for each decade and compared it to average precipitation for that decade. I conducted this analysis in order to see if average precipitation or total acres burned has changed over the decades. I then solely looked at precipitation for time periods where California experienced its most severe droughts
+
+  
+## California Wildfires and Precipitation
+  
+  As stated previously, California average severity of fires is at one of its highest points. This increase in severity of fires has been attributed to be a result of the global increase in temperature due to climate change. This increase in temperature has also had an effect on average precipitation, especially rainfall. Climate change is projected to increase rainfall in already wet areas but places such as California, which are already dry areas, will decrease in the amount of precipitation (Clark). 
+     
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+(acres_burned_years+precip_years) + plot_annotation(tag_levels = "A")
+```
+
+  Figures A and B above show the total acres burned and the average precipitation for each year between the 1933 and 2016 in California. The total acres burned was at an average low point between 1960 and 1990, but since then there has been an overall increase in the severity of fires. Figure B shows the inverse effect of figure A. Average precipitation was fairly stable and was at a high point between 1960 and 2000, but there has been an overall decline in the average precipitation. 
+  
+  This graph helps support the notion that there could be a relationship between these two factors. This data is consistent with the previous graph showing drought severity because drought severity seemed to increase overtime as well.
+
+## Is There a Lag of Drought's Effect on Wildfire?
+
+  Drought has been known to be linked to the severity of wildfires. Droughts have a significant impact on not only the severity of wildfires but also causes water shortages to forests, rural drinking water supplies, and agriculture (Lund). These shortages in water have caused mass extinction of fish, killed millions of trees, and have caused the economy to lose billions of dollars. Since droughts have such profound effects on environment and economy, it is important to see if droughts have a lag of when they impact wildfires. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+acres_burned_lag
+```
+
+  The figure above shows the total acres burned compared to the drought severity index for each year with different lags ranging from zero and five years. This graph shows that droughts only have an impact on the severity of fires from zero to one year of lag, as shown by the slightly negative correlation between drought severity and acres burned in the first two figures in the image above. There does not seem to be an impact of droughts on acres burned between two to five years after the drought occured. 
+  
+  This result suggests California takes about a year to be free of significant impact of droughts on wildfire severity. These results can help California be extra prepared for wildfires zero to one year after the drought has occurred.
+ 
+  
+## California Drought, Precipitation, and Fires Over the Decades
+
+  Due to an increase in climatic effects, it is important to see the changes in environmental factors due to climate change over time. Observing the changes in these factors over the different decades can also be used to understand patterns that can help to predict the future effects of climate change.       
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+drought_index_decade_map
+```
+
+The figure above suggests that California has had on and off decades of being in and out of droughts. The worst dorughts that California experienced were in the 30's, 00's, and 10's. The graph also suggests that California has, on average, experienced more droughts than not over the past century. The only time California was not on average in a drought was in the 40's, 70' and 80's. 
+  
+  
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+acres_burned_decades_map
+```
+
+  As shown above, the average acres burned has increased over the decades. The 30's and 40's had the highest average acres burned within the last century. This could be due to the drought in the 1930's, that was shown in the previous graph. There was a low in acres burned in the 70's and 80's but there has been a steady increase since then. The graph also does not include all of the data from the 2010's because the data only goes to 2016. So, this graph does not include major fires that happened in 2018, which would probably skew the results if added.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+dollar_damage_decade_map
+```
+
+  Dollar damage, as a result of fires, has had a steady increase over the decades. From the 30's to 70's, dollar damage of fires was at a low point, however every year since then the dollar damage seems to increase. This result is definitely partially due to the increase in acres burned in California. This result could also be this way because there has been a 14% increase in the number of commercial buildings since 2003 throughout the US (“U.S. Energy Information Administration - EIA - Independent Statistics and Analysis”). Since there has been such an increase in the amount of commercial buildings, it is practical to assume that there would be an increase in dollar damage. If there are more buildings to be destroyed and there is an increase in the amount of acres a fire is affecting, then there would be an increase in the dollar damage from fires in the US.
+  
+## California's Most Severe Droughts: A Closer Look
+  
+  California has experienced some of its most severe droughts within the past century. Some of California's most notable droughts were between the years of 1976-1977, 1987-1992 and 2012-2014 (California's Most Significant Droughts: Comparing Historical and Recent Years).
+
+  
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+drought_fire_1974_1979
+```
+
+  The 1976-1977 drought's average precipitation and acres burned due to wildfire is demonstrated in the figure above with a two year buffer before and after the drought occurred. This drought caused significant effects to the ski industry by losing a lot of money due to insufficient precipitation. National forests also had $10 million worth of trees die due to the dry conditions that caused fires (Shelton). 
+  
+  As shown in the figure above, there is an inverse relationship between average precipitation and total acres burned during the drought. There was an increase in fires between 1976 and 1977 and a major increase in 1979. This is consistent with the average precipitation graph. There was a decrease in precipitation in 1976 and 1977 and a large increase in 1978. There was once again a decrease in precipitation in 1979, which likely triggered the increase in acres burned.
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+drought_fire_1985_1994
+```
+
+  The 1986-1992 drought's average precipitation and acres burned due to wildfire is demonstrated in the figure above with a two year buffer before and after the drought occurred. Throughout this drought period, streamflow had one-half of its yearly average (Nash). Precipitation also had three-fourths of its yearly average. Average precipitation seemed to have a similar inverse correlation to acres burned as the 1976-1977 drought.   
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+drought_fire_2010_2016
+```
+
+   The 2012-2014 drought's average precipitation and acres burned due to wildfire is demonstrated in the figure above with a two year buffer before and after the drought occurred. This drought is the most severe drought in 1,200 years. The drought was also thirty percent more severe than the next worst drought which occured in 1580. 
+   
+   This graph does not show an inverse correlation between acres burned and average precipitation (Bora). The total acres burned in California increased between 2010 and 2016, however precipitation fluctuated greatly. While precipitation was low throughout the drought there was not a decrease in the severity of fires after an increase in precipitation. This effect could be because of the lasting effects of the excessive dryness due to drought. Climate change could also impact other factors that contribute to high severity of wildfires and therefore causing this high severity.
+  
+## Discussion
+
+  California is the most populous state and is a popular vacation spot around the globe. Due to changes in the climate, many California cities have been destroyed due to fires. If climate change continues to progress at this rate, cities will continue to be destroyed and there will be an increase in the negative effects of droughts discussed before. This is particularly important because the last graph showed an increase in severity of fire even after an increase in rainfall. This effect would only get worse if droughts, such as the 2012-2014 drought, continue to happen. The dollar damages due to fires will also continue to increase, causing a major hit for the economy.
+  
+  Climate change has not only had an impact on California, Australia has recently experienced very severe forest fires and the entire globe has been experiencing the effects of climate change through global warming. Although the data used in this project does not capture the effects past 2016, these findings are still very pertinent today. In 2018, a wildfire swept through Paradise, California killing 86 people and destroying total destruction of the city (Gee, Alastair, & Anguiano). Another notable fire was the Woolsey Fire, that occurred in Ventura, which destroyed 97,000 acres, damaged more than 1,600 buildings and killed three people (Holland).
+
+  
+  !["Paradise Fire Aftermath"](181205-paradise-california-wildfire-homes-cs-507p_2195a86e5e507e6a2b78324973cf2f43.fit-760w.jpg)
+  
+  Parts of California, including San Francisco, received no rain in February, 2020. This lack of precipitation has not happened since 1864 (Leonard). California is predicted to enter another drought starting the summer of 2020. California is also predicted to have an earlier "wildfire season" this year which means there will be an increase in the number of fires in 2020.
+  
+  Although this may not directly impact people who live outside of California, it indirectly has an impact on everyone. People should take necessary steps, to be more environmentally friendly, in order to stop the progression of climate change and to decrease the severity of droughts and forest fires. 
+  
+## References
+
+Bora, Kukil. “California Drought Of 2012-2014 Is The Worst In 1,200 Years: Study.” International Business Times, 6 Dec. 2014, www.ibtimes.com/california-drought-2012-2014-worst-1200-years-study-1737522.
+
+California's Most Significant Droughts: Comparing Historical and Recent Years. Feb. 2015, water.ca.gov/LegacyFiles/waterconditions/docs/California_Signficant_Droughts_2015_small.pdf.
+
+Clark, Duncan. “How Will Climate Change Affect Rainfall?” The Guardian, Guardian News and Media, 15 Dec. 2011, www.theguardian.com/environment/2011/dec/15/climate-change-rainfall.
+
+“Climate Science Special Report: Droughts, Floods, and Wildfire.” Droughts, Floods, and Wildfire - Climate     Science Special Report, science2017.globalchange.gov/chapter/8/.
+
+Gee, Alastair, and Dani Anguiano. “Last Day in Paradise: the Untold Story of How a Fire Swallowed a Town.” The Guardian, Guardian News and Media, 20 Dec. 2018, www.theguardian.com/environment/2018/dec/20/last-day-in-paradise-california-deadliest-fire-untold-story-survivors.
+
+Holland, Emily. “Photos That Captured The Heartache And Enormity Of Woolsey Fire.” Malibu, CA Patch, Patch, 11 Nov. 2019, patch.com/california/malibu/remembering-woolsey-fire-through-devastating-photos.
+
+Leonard, Diana. “Dry California Winter Prompts Wildfire and Drought Concerns.” The Washington Post, WP Company, 2 Mar. 2020, www.washingtonpost.com/weather/2020/03/02/dry-california-winter-prompts-wildfire-drought-concerns/.
+
+Lund, Jay. “Journal of Water Resources Planning and Management.” Lessons from California's 2012–2016 Drought | Journal of Water Resources Planning and Management | Vol 144, No 10, ascelibrary.org/doi/full/10.1061/%28ASCE%29WR.1943-5452.0000984.
+
+Meyer, Robinson. “California's Wildfires Are 500 Percent Larger Due to Climate Change.” The Atlantic,              Atlantic Media Company, 16 July 2019,                     www.theatlantic.com/science/archive/2019/07/climate-change-500-percent-increase-california-wildfires/594016/.
+
+Nash, Linda. “Environment and Drought in California 1987-1992.” Pacific Institute, 25 Feb. 2020, pacinst.org/publication/california-drought-87-92/.
+
+“Palmer Drought Severity Index (PDSI).” Palmer Drought Severity Index (PDSI) | NCAR - Climate Data Guide, climatedataguide.ucar.edu/climate-data/palmer-drought-severity-index-pdsi.
+
+Shelton, Marlyn. “The 1976 and 1977 Drought in California: Extent and Severity.” Taylor &amp; Francis, 1977, www.tandfonline.com/doi/abs/10.1080/00431672.1977.9931816?journalCode=vwws20.
+
+“U.S. Energy Information Administration - EIA - Independent Statistics and Analysis.” CBECS 2012: Building Stock Results, 4 Mar. 2015, www.eia.gov/consumption/commercial/reports/2012/buildstock/.
+

@@ -3,7 +3,7 @@ title: "resume"
 output: 
   html_document:
     theme: null
-    css: theme.css
+    css: styles.css
 date: "2025-08-13"
 ---
 
