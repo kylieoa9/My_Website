@@ -2,12 +2,12 @@
 title: " "
 output: 
   html_document:
-    theme: journal
+    theme: cosmo
     css: styles.css
 ---
 
-<div style = "text-align: center;">
-# Data Science Projects List
+<div class="banner">
+  <h1>Data Science Projects</h1>
 </div>
 
 ## California Wildfire Project

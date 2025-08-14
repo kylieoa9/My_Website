@@ -1,14 +1,17 @@
 ---
-title: "My Website"
+title: " "
 description: |
   Welcome to the website. I hope you enjoy it!
 site: distill::distill_website
 output: 
   html_document:
-    theme: journal
+    theme: cosmo
     css: styles.css
 ---
 
+<div class="banner">
+  <h1>Welcome to My Website</h1>
+</div>
 
 <div class="img-text-row">
 

@@ -1,12 +1,11 @@
 /* Navbar background */
 .navbar-default, .navbar {
-  background-color: #E0EEEE !important;
+  background-color: #9FB6CD !important;
 }
 
 /* Navbar links */
 .navbar-default .navbar-nav > li > a,
 .navbar-default .navbar-brand {
-  font-family: "Arial", sans-serif;
   color: #0F2E3D !important;
   font-size: 24px; /* 36px might be too large for some themes */
 }
@@ -14,10 +13,15 @@
 /* Navbar hover */
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-brand:hover {
-  background-color: #C1CDCD !important;
+  background-color: #FFFAFA !important;
   color: #0F2E3D !important;
 }
 
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-brand.active {
+  background-color: #FFFAFA !important; /* white-ish background */
+  color: #0F2E3D !important;           /* keep text black-ish */
+}
 
 
 .custom-margins {
@@ -56,7 +60,7 @@
   width: 200px;
   height: auto;
   border-radius: 20px;
-  margin-left: 100px;
+  margin-left: 230px;
   margin-top: 100px;
 }
 
@@ -86,9 +90,9 @@
 .banner {
   width: 100%;                 /* full width of the page */
   height: 250px;               /* adjust the height as needed */
-  background-image: url('images/banner.png'); /* path to your image */
+  background-image: url('banner.png'); /* path to your image */
   background-size: cover;      /* makes the image cover the entire div */
-  background-position: center; /* centers the image */
+  background-position: top; /* centers the image */
   background-repeat: no-repeat;
   display: flex;               /* optional: to center text inside */
   align-items: center;         /* vertical centering */

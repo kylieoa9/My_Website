@@ -1,12 +1,19 @@
 ---
-title: "Published Articles"
+title: " "
 output: 
   html_document:
-    theme: journal
+    theme: cosmo
     css: styles.css
 ---
 
-<div style = "text-align: center;">
+<div class="banner">
+  <h1>Published Articles</h1>
+</div>
+
+<br>
+<br>
+
+<div style = "text-align: center; max-width: 600px; margin: 0 auto;">
 ## Associative Memory of Honest and Dishonest Faces in Young and Older Adults
 </div>
 
@@ -14,7 +21,9 @@ output:
 [<img src="AMS_pic.png" width="400" class="hover-img">](Associative_memory_for_honest_.pdf)
 </div>
 
-<div style = "text-align: center;">
+<br>
+
+<div style = "text-align: center;max-width: 600px; margin: 0 auto;">
 ## Memory for Free: Gist-Based False Memory for Advertisements
 </div>
 
@@ -22,7 +31,9 @@ output:
 [<img src="Memory_for_free_pic.png" width="400" class="hover-img">](Memory-for-Free.pdf)
 </div>
 
-<div style = "text-align: center;">
+<br>
+
+<div style = "text-align: center;max-width: 600px; margin: 0 auto;">
 ## Clinically studied or Clinically Proven? Memory for claims in print advertisements
 </div>
 

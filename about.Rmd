@@ -1,19 +1,23 @@
 ---
-title: "About Me"
+title: " "
 description: |
   Some additional details about the website
 output: 
   html_document:
-    theme: journal
+    theme: cosmo
     css: styles.css
 ---
+
+<div class="banner">
+  <h1>About Me</h1>
+</div>
 
 <div style = "text-align: center;">
 # Kylie Alberts 
 </div>
 
 <div style = "text-align: center;">
-[<img src="images/231130_PSY_0084.jpg" width="200">](images/231130_PSY_0084.jpg)
+[<img src="Presentat.png" width="350">](Presentat.png)
 </div>
 
 <div class="custom-margins">
