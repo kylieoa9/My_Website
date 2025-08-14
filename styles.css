@@ -1,18 +1,40 @@
+/* Change navbar background */
 .navbar {
-  background-color: #E0EEEE;
+  background-color: #E0EEEE !important;
 }
 
-.navbar a {
+/* Change navbar link text */
+.navbar .navbar-nav > li > a,
+.navbar-brand {
   font-family: "Arial", sans-serif;
-  color: #0F2E3D;
+  color: #0F2E3D !important;
   font-size: 36px;
 }
 
-.navbar a:hover {
-  background-color: #C1CDCD;
+/* Change navbar link hover background */
+.navbar .navbar-nav > li > a:hover,
+.navbar-brand:hover {
+  background-color: #C1CDCD !important;
+  color: #0F2E3D !important;
 }
-
 .custom-margins {
   margin-left: 300px;
   margin-right: 300px;
+}
+
+/* Base styling for the image */
+.hover-img {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 8px;
+}
+
+/* On hover: scale up slightly & add shadow */
+.hover-img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Optional: change cursor to pointer */
+.clickable-img {
+  cursor: pointer;
 }

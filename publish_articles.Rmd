@@ -1,33 +1,32 @@
 ---
-title: "publish_articles"
+title: "Published Articles"
 output: 
   html_document:
     theme: null
     css: styles.css
-date: "2025-08-13"
 ---
 
-  
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+<div style = "text-align: center;">
+## Associative Memory of Honest and Dishonest Faces in Young and Older Adults
+</div>
 
-## R Markdown
+<div style = "text-align: center;">
+[<img src="AMS_pic.png" width="400" class="hover-img">](Associative_memory_for_honest_.pdf)
+</div>
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+<div style = "text-align: center;">
+## Memory for Free: Gist-Based False Memory for Advertisements
+</div>
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+<div style = "text-align: center;">
+[<img src="Memory_for_free_pic.png" width="400" class="hover-img">](Memory-for-Free.pdf)
+</div>
 
-```{r cars}
-summary(cars)
-```
+<div style = "text-align: center;">
+## Clinically studied or Clinically Proven? Memory for claims in print advertisements
+</div>
 
-## Including Plots
+<div style = "text-align: center;">
+[<img src="clinically-studied.png" width="400" class="hover-img">](Clinically-studied.pdf)
+</div>
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

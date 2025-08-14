@@ -1,12 +1,16 @@
 ---
-title: "projects"
+title: " "
 output: 
   html_document:
     theme: null
     css: styles.css
-date: "2025-08-13"
 ---
 
-## Projects list
+<div style = "text-align: center;">
+# Data Science Projects List
+</div>
 
-1. [Exploring Environmental Data](Final_Project_Alberts.html)
+## California Wildfire Project
+<div style = "text-align: left;">
+[<img src="EED_pic.png" width="400" class="hover-img">](Final_Project_Alberts.html)
+</div>

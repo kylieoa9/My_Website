@@ -17,7 +17,7 @@ output:
 </div>
 
 <div class="custom-margins">
-I am originally from the San Francisco Bay Area. I obtained my B.S. in Neurscience at Union College, NY. At Union, I also minored in Data Analytics and German. I am a current Ph.D. Candidate at UCLA in Psychology where I study older adults' susceptibility to falling for scams and fraud. I recently interned at American AgCredit as their 2025 Data Science Intern. Upon graduation, I hope to pursue a career in Data Science so I can discover insights through data and code everyday! In my free time, I love to explore National Parks, read books, and go to concerts. 
+I am originally from the San Francisco Bay Area. I obtained my B.S. in Neuroscience at Union College, NY. At Union, I also minored in Data Analytics and German. I am a current Ph.D. Candidate at UCLA in Psychology where I study older adults' susceptibility to falling for scams and fraud. I recently interned at American AgCredit as their 2025 Data Science Intern. Upon graduation, I hope to pursue a career in Data Science so I can discover insights through data and code everyday! In my free time, I love to explore National Parks, read books, and go to concerts. 
 </div>
 
 
