@@ -2,7 +2,7 @@
 title: "California Droughts and Fires"
 output: 
   html_document:
-    theme: null
+    theme: journal
     css: theme.css
 ---
 

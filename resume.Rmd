@@ -2,7 +2,7 @@
 title: "My Resume"
 output: 
   html_document:
-    theme: null
+    theme: journal
     css: styles.css
 ---
 

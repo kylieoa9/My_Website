@@ -5,19 +5,18 @@ description: |
 site: distill::distill_website
 output: 
   html_document:
-    theme: null
+    theme: journal
     css: styles.css
 ---
-  
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
 
-# Learn more about creating websites with Distill at:
-# https://rstudio.github.io/distill/website.html
+<div class="img-text-row">
 
-# Learn more about publishing to GitHub Pages at:
-# https://rstudio.github.io/distill/publish_website.html#github-pages
+![ ](images/231130_PSY_0084.jpg)
 
-```
+<div class="text-block">
+## Kylie Alberts
+I am a current Ph.D. Candidate in Psychology pursuing a career in Data Science.
+</div>
 
+</div>
