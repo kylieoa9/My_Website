@@ -14,3 +14,7 @@ output:
 <div style = "text-align: left;">
 [<img src="EED_pic.png" width="400" class="hover-img">](Final_Project_Alberts.html)
 </div>
+
+<div style = "text-align: center;">
+[<img src="datascience_proj.png" width="400" class="hover-img">](Kylie_Alberts_Data_Science_2025.pdf)
+</div>
