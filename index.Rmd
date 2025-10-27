@@ -15,7 +15,7 @@ output:
 
 <div class="img-text-row">
 
-![ ](images/231130_PSY_0084.jpg)
+![ ](docs/231130_PSY_0084.jpg)
 
 <div class="text-block">
 ## Kylie Alberts
