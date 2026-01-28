@@ -15,9 +15,9 @@ library(patchwork)
 
 ```{r echo=FALSE, results='hide', message=FALSE, warning=FALSE}
 #Loading in the data
-ca_fires_data<- read.csv("./Docs/Data/ca-fire-incidents.csv")
+ca_fires_data<- read.csv("/Users/kyliealberts/Desktop/Union Stuff/ENS_215/Final_project/Data/ca-fire-incidents.csv")
 
-drought_data <- read.csv("./Docs/Data/Drought_index.csv") #Loading in the data files
+drought_data <- read.csv("/Users/kyliealberts/Desktop/Union Stuff/ENS_215/Final_project/Data/Drought_index.csv") #Loading in the data files
 
 precip_data <- read_csv("https://stahlm.github.io/ENS_215/Data/NOAA_State_Precip_LabData.csv")
 ```
@@ -600,7 +600,7 @@ drought_fire_1985_1994 <- (years1985_1994/years1985_1994_fire)+plot_annotation(t
 
 
 
-!["California Fire"](01_california_wildfires_cranstonfire_nighttime_sp_002.adapt.1900.1.jpg)
+!["California Fire"](docs/01_california_wildfires_cranstonfire_nighttime_sp_002.adapt.1900.1.jpg)
 
 ## Introduction
 
@@ -622,7 +622,7 @@ interactive_drought_severity_bar
   I also plan to explore the number and severity of fires for years that were reported as some of California's most extreme droughts in history. These reports include the two-year drought between 1976-1977, the six year drought between 1987-1992 and the three year drought between 2012 and 2014 (California's Most Significant Droughts: Comparing Historical and Recent Years).
 
   
-!["California Drought Impact"](102745938-drought.jpg)  
+!["California Drought Impact"](docs/102745938-drought.jpg)  
   
 ## Methods
 
@@ -715,7 +715,7 @@ drought_fire_2010_2016
   Climate change has not only had an impact on California, Australia has recently experienced very severe forest fires and the entire globe has been experiencing the effects of climate change through global warming. Although the data used in this project does not capture the effects past 2016, these findings are still very pertinent today. In 2018, a wildfire swept through Paradise, California killing 86 people and destroying total destruction of the city (Gee, Alastair, & Anguiano). Another notable fire was the Woolsey Fire, that occurred in Ventura, which destroyed 97,000 acres, damaged more than 1,600 buildings and killed three people (Holland).
 
   
-  !["Paradise Fire Aftermath"](181205-paradise-california-wildfire-homes-cs-507p_2195a86e5e507e6a2b78324973cf2f43.fit-760w.jpg)
+  !["Paradise Fire Aftermath"](docs/paradise_fire.jpeg)
   
   Parts of California, including San Francisco, received no rain in February, 2020. This lack of precipitation has not happened since 1864 (Leonard). California is predicted to enter another drought starting the summer of 2020. California is also predicted to have an earlier "wildfire season" this year which means there will be an increase in the number of fires in 2020.
   

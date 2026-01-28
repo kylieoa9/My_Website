@@ -18,7 +18,7 @@ output:
 </div>
 
 <div style = "text-align: center;">
-[<img src="artificial_faces.png" width="400" class="hover-img">](artifical_study_paper.pdf)
+[<img src="artificial_faces.png" width="400" class="hover-img">](docs/artifical_study_paper.pdf)
 </div>
 
 <br>
@@ -28,7 +28,7 @@ output:
 </div>
 
 <div style = "text-align: center;">
-[<img src="AMS_pic.png" width="400" class="hover-img">](Associative_memory_for_honest_.pdf)
+[<img src="AMS_pic.png" width="400" class="hover-img">](docs/Associative_memory_for_honest_.pdf)
 </div>
 
 <br>
@@ -38,7 +38,7 @@ output:
 </div>
 
 <div style = "text-align: center;">
-[<img src="Memory_for_free_pic.png" width="400" class="hover-img">](Memory-for-Free.pdf)
+[<img src="Memory_for_free_pic.png" width="400" class="hover-img">](docs/Memory-for-Free.pdf)
 </div>
 
 <br>
@@ -48,6 +48,6 @@ output:
 </div>
 
 <div style = "text-align: center;">
-[<img src="clinically-studied.png" width="400" class="hover-img">](Clinically-studied.pdf)
+[<img src="clinically-studied.png" width="400" class="hover-img">](docs/Clinically-studied.pdf)
 </div>
 
