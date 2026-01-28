@@ -1,8 +1,8 @@
 name: "My Website"
 title: "My Website"
+output_dir: "docs"
 description: |
   My Website
-output_dir: "docs"
 navbar:
   right:
     - text: "Home"
