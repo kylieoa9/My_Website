@@ -19,7 +19,7 @@ output:
 
 <div class="text-block">
 ## Kylie Alberts
-I am a current Ph.D. Candidate in Psychology pursuing a career in Data Science.
+I am a current Ph.D. Candidate in Psychology pursuing a career in Data Science or UX Research.
 </div>
 
 </div>
