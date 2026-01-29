@@ -12,12 +12,12 @@ output:
 
 ## California Wildfire Project
 <div style = "text-align: center;">
-[<img src="EED_pic.png" width="400" class="hover-img">](files_/Final_Project_Alberts.html)
+[<img src="file_/EED_pic.png" width="400" class="hover-img">](Final_Project_Alberts.html)
 </div>
 
 <br> 
 
 ## American AgCredit Data Science Intern Project
 <div style = "text-align: center;">
-[<img src="datascience_proj.png" width="400" class="hover-img">](files_/Kylie_Alberts_Data_Science_2025.pdf)
+[<img src="files_/datascience_proj.png" width="400" class="hover-img">](files_/Kylie_Alberts_Data_Science_2025.pdf)
 </div>
