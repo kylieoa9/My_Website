@@ -1,6 +1,8 @@
 name: "My Website"
 title: "My Website"
 output_dir: "docs"
+extra_files:
+  - files_ 
 description: |
   My Website
 navbar:

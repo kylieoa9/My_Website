@@ -17,7 +17,7 @@ output:
 </div>
 
 <div style = "text-align: center;">
-[<img src="Presentat.png" width="350">](docs/Presentat.png)
+[<img src="Presentat.png" width="350">](files_/Presentat.png)
 </div>
 
 <div class="custom-margins">
@@ -29,7 +29,7 @@ I am originally from the San Francisco Bay Area. I obtained my B.S. in Neuroscie
 </div>
 
 <div style = "text-align: center;">
-[<img src="docs/linkedin.png" width="50" class="hover-img">](https://www.linkedin.com/in/kylie-alberts-077642155/)
+[<img src="files_linkedin.png" width="50" class="hover-img">](https://www.linkedin.com/in/kylie-alberts-077642155/)
 Email: kyliealberts14@gmail.com
 </div>
 

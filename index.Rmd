@@ -15,7 +15,7 @@ output:
 
 <div class="img-text-row">
 
-![ ](/Users/kyliealberts/My Website/docs/231130_PSY_0084.jpg)
+![ ](files_/231130_PSY_0084.jpg)
 
 <div class="text-block">
 ## Kylie Alberts
