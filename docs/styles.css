@@ -90,7 +90,7 @@
 .banner {
   width: 100%;                 /* full width of the page */
   height: 250px;               /* adjust the height as needed */
-  background-image: url('banner.png'); /* path to your image */
+  background-image: url('files_/banner.png'); /* path to your image */
   background-size: cover;      /* makes the image cover the entire div */
   background-position: top; /* centers the image */
   background-repeat: no-repeat;
