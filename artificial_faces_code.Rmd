@@ -1,0 +1,2038 @@
+---
+title: "Artificial Faces Code"
+output: 
+  html_document:
+    theme: cosmo
+    css: theme.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r} 
+##LOADING PACKAGES
+
+library(ggplot2)
+library(plyr)
+library(lme4)
+library(lmerTest)
+library(pbkrtest)
+library(dplyr)
+library(tidyverse)
+```
+
+```{r}
+library(readr)
+library(dplyr)
+
+# Specify the path to your folder
+folder_path <- "/Users/kyliealberts/Desktop/AMS_A"
+
+# List all CSV files in the folder
+csv_files <- list.files(folder_path, pattern = "\\.csv$", full.names = TRUE)
+
+# Function to check if a CSV file has a specific column
+has_verification_code <- function(file_path) {
+  # Read only the first row to check column names
+  data <- read_csv(file_path, n_max = 1, show_col_types = FALSE)
+  
+  # Check if 'Finish.timesOff' column exists
+  return("Finish.timesOff" %in% colnames(data))
+}
+
+# Initialize an empty dataframe to store all data
+all_data <- tibble()
+
+# Loop through files, load and append if it has the column
+for(file_path in csv_files) {
+  if(has_verification_code(file_path)) {
+    # Load the CSV file
+    data <- read_csv(file_path, show_col_types = FALSE)
+    
+    # Force participant column to character if it exists
+    if ("participant" %in% colnames(data)) {
+      data$participant <- as.character(data$participant)
+      data$textbox_comp.text <- as.character(data$textbox_comp.text)
+      data$textbox_comp_2.text <- as.character(data$textbox_comp_2.text)
+      data$bruinID.text <- as.character(data$bruinID.text)
+    }
+
+    # Append to the master dataframe
+    all_data <- bind_rows(all_data, data)
+  } else {
+    cat("Skipping file, does not have 'Finish.timesOff' column:", file_path, "\n")
+  }
+}
+```
+
+```{r}
+library(readr)
+library(dplyr)
+
+# Specify the path to your folder
+folder_path <- "/Users/kyliealberts/Desktop/AMS_A_O"
+
+# List all CSV files in the folder
+csv_files <- list.files(folder_path, pattern = "\\.csv$", full.names = TRUE)
+
+# Function to check if a CSV file has a specific column
+has_verification_code <- function(file_path) {
+  # Read only the first row to check column names
+  data_oa <- read_csv(file_path, n_max = 1, show_col_types = FALSE)
+  
+  # Check if 'Finish.timesOff' column exists
+  return("Finish.timesOff" %in% colnames(data_oa))
+}
+
+# Initialize an empty dataframe to store all data
+all_data_oa <- tibble()
+
+# Loop through files, load and append if it has the column
+for(file_path in csv_files) {
+  if(has_verification_code(file_path)) {
+    # Load the CSV file
+    data_oa <- read_csv(file_path, show_col_types = FALSE)
+    
+    # Force participant column to character if it exists
+    if ("participant" %in% colnames(data_oa)) {
+      data_oa$participant <- as.character(data_oa$participant)
+      data_oa$textbox_comp.text <- as.character(data_oa$textbox_comp.text)
+      data_oa$textbox_comp_2.text <- as.character(data_oa$textbox_comp_2.text)
+      data_oa$bruinID.text <- as.character(data_oa$bruinID.text)
+    }
+
+    # Append to the master dataframe
+    all_data_oa <- bind_rows(all_data_oa, data_oa)
+  } else {
+    cat("Skipping file, does not have 'Finish.timesOff' column:", file_path, "\n")
+  }
+}
+```
+
+```{r}
+library(readr)
+library(dplyr)
+
+# Specify the path to your folder
+folder_path <- "/Users/kyliealberts/Desktop/AMS_B"
+
+# List all CSV files in the folder
+csv_files <- list.files(folder_path, pattern = "\\.csv$", full.names = TRUE)
+
+# Function to check if a CSV file has a specific column
+has_verification_code <- function(file_path) {
+  # Read only the first row to check column names
+  data_b <- read_csv(file_path, n_max = 1, show_col_types = FALSE)
+  
+  # Check if 'Finish.timesOff' column exists
+  return("Finish.timesOff" %in% colnames(data_b))
+}
+
+# Initialize an empty dataframe to store all data
+all_data_b <- tibble()
+
+# Loop through files, load and append if it has the column
+for(file_path in csv_files) {
+  if(has_verification_code(file_path)) {
+    # Load the CSV file
+    data_b <- read_csv(file_path, show_col_types = FALSE)
+    
+    # Force participant column to character if it exists
+    if ("participant" %in% colnames(data_b)) {
+      data_b$participant <- as.character(data_b$participant)
+      data_b$textbox_comp.text <- as.character(data_b$textbox_comp.text)
+      data_b$textbox_comp_2.text <- as.character(data_b$textbox_comp_2.text)
+      data_b$bruinID.text <- as.character(data_b$bruinID.text)
+      data_b$session <- as.character(data_b$session)
+      data_b$textboxAge_2.text <- as.character(data_b$textboxAge_2.text)
+    }
+
+    # Append to the master dataframe
+    all_data_b <- bind_rows(all_data_b, data_b)
+  } else {
+    cat("Skipping file, does not have 'Finish.timesOff' column:", file_path, "\n")
+  }
+}
+```
+
+```{r}
+library(readr)
+library(dplyr)
+
+# Specify the path to your folder
+folder_path <- "/Users/kyliealberts/Desktop/AMS_B_O"
+
+# List all CSV files in the folder
+csv_files <- list.files(folder_path, pattern = "\\.csv$", full.names = TRUE)
+
+# Function to check if a CSV file has a specific column
+has_verification_code <- function(file_path) {
+  # Read only the first row to check column names
+  data_b_o <- read_csv(file_path, n_max = 1, show_col_types = FALSE)
+  
+  # Check if 'Finish.timesOff' column exists
+  return("Finish.timesOff" %in% colnames(data_b_o))
+}
+
+# Initialize an empty dataframe to store all data
+all_data_b_o <- tibble()
+
+# Loop through files, load and append if it has the column
+for(file_path in csv_files) {
+  if(has_verification_code(file_path)) {
+    # Load the CSV file
+    data_b_o <- read_csv(file_path, show_col_types = FALSE)
+    
+    # Force participant column to character if it exists
+    if ("participant" %in% colnames(data_b_o)) {
+      data_b_o$participant <- as.character(data_b_o$participant)
+      data_b_o$textbox_comp.text <- as.character(data_b_o$textbox_comp.text)
+      data_b_o$textbox_comp_2.text <- as.character(data_b_o$textbox_comp_2.text)
+      data_b_o$bruinID.text <- as.character(data_b_o$bruinID.text)
+      data_b_o$session <- as.character(data_b_o$session)
+      data_b_o$textboxAge_2.text <- as.character(data_b_o$textboxAge_2.text)
+      data_b_o$textboxBirthday.text <- as.character(data_b_o$textboxBirthday.text)
+    }
+
+    # Append to the master dataframe
+    all_data_b_o <- bind_rows(all_data_b_o, data_b_o)
+  } else {
+    cat("Skipping file, does not have 'Finish.timesOff' column:", file_path, "\n")
+  }
+}
+```
+
+
+```{r}
+library(readr)
+library(dplyr)
+
+# Specify the path to your folder
+folder_path <- "/Users/kyliealberts/Desktop/AMS_A2"
+
+# List all CSV files in the folder
+csv_files <- list.files(folder_path, pattern = "\\.csv$", full.names = TRUE)
+
+# Function to check if a CSV file has a specific column
+has_verification_code <- function(file_path) {
+  # Read only the first row to check column names
+  data_c <- read_csv(file_path, n_max = 1, show_col_types = FALSE)
+  
+  # Check if 'Finish.timesOff' column exists
+  return("Finish.timesOff" %in% colnames(data_c))
+}
+
+# Initialize an empty dataframe to store all data
+all_data_c <- tibble()
+
+# Loop through files, load and append if it has the column
+for(file_path in csv_files) {
+  if(has_verification_code(file_path)) {
+    # Load the CSV file
+    data_c <- read_csv(file_path, show_col_types = FALSE)
+    
+    # Force participant column to character if it exists
+    if ("participant" %in% colnames(data_c)) {
+      data_c$participant <- as.character(data_c$participant)
+      data_c$textbox_comp.text <- as.character(data_c$textbox_comp.text)
+      data_c$textbox_comp_2.text <- as.character(data_c$textbox_comp_2.text)
+      data_c$bruinID.text <- as.character(data_c$bruinID.text)
+    }
+
+    # Append to the master dataframe
+    all_data_c <- bind_rows(all_data_c, data_c)
+  } else {
+    cat("Skipping file, does not have 'Finish.timesOff' column:", file_path, "\n")
+  }
+}
+```
+
+```{r}
+library(readr)
+library(dplyr)
+
+# Specify the path to your folder
+folder_path <- "/Users/kyliealberts/Desktop/AMS_A2_O"
+
+# List all CSV files in the folder
+csv_files <- list.files(folder_path, pattern = "\\.csv$", full.names = TRUE)
+
+# Function to check if a CSV file has a specific column
+has_verification_code <- function(file_path) {
+  # Read only the first row to check column names
+  data_c_o <- read_csv(file_path, n_max = 1, show_col_types = FALSE)
+  
+  # Check if 'Finish.timesOff' column exists
+  return("Finish.timesOff" %in% colnames(data_c_o))
+}
+
+# Initialize an empty dataframe to store all data
+all_data_c_o <- tibble()
+
+# Loop through files, load and append if it has the column
+for(file_path in csv_files) {
+  if(has_verification_code(file_path)) {
+    # Load the CSV file
+    data_c_o <- read_csv(file_path, show_col_types = FALSE)
+    
+    # Force participant column to character if it exists
+    if ("participant" %in% colnames(data_c_o)) {
+      data_c_o$participant <- as.character(data_c_o$participant)
+      data_c_o$textbox_comp.text <- as.character(data_c_o$textbox_comp.text)
+      data_c_o$textbox_comp_2.text <- as.character(data_c_o$textbox_comp_2.text)
+      data_c_o$bruinID.text <- as.character(data_c_o$bruinID.text)
+      data_c_o$textboxBirthday.text <- as.character(data_c_o$textboxBirthday.text)
+    }
+
+    # Append to the master dataframe
+    all_data_c_o <- bind_rows(all_data_c_o, data_c_o)
+  } else {
+    cat("Skipping file, does not have 'Finish.timesOff' column:", file_path, "\n")
+  }
+}
+```
+
+
+```{r}
+library(readr)
+library(dplyr)
+
+# Specify the path to your folder
+folder_path <- "/Users/kyliealberts/Desktop/AMS_B2"
+
+# List all CSV files in the folder
+csv_files <- list.files(folder_path, pattern = "\\.csv$", full.names = TRUE)
+
+# Function to check if a CSV file has a specific column
+has_verification_code <- function(file_path) {
+  # Read only the first row to check column names
+  data_d <- read_csv(file_path, n_max = 1, show_col_types = FALSE)
+  
+  # Check if 'Finish.timesOff' column exists
+  return("Finish.timesOff" %in% colnames(data_d))
+}
+
+# Initialize an empty dataframe to store all data
+all_data_d <- tibble()
+
+# Loop through files, load and append if it has the column
+for(file_path in csv_files) {
+  if(has_verification_code(file_path)) {
+    # Load the CSV file
+    data_d <- read_csv(file_path, show_col_types = FALSE)
+    
+    # Force participant column to character if it exists
+    if ("participant" %in% colnames(data_d)) {
+      data_d$participant <- as.character(data_d$participant)
+      data_d$textbox_comp.text <- as.character(data_d$textbox_comp.text)
+      data_d$textbox_comp_2.text <- as.character(data_d$textbox_comp_2.text)
+      data_d$bruinID.text <- as.character(data_d$bruinID.text)
+      data_d$textboxBirthday.text <- as.character(data_d$textboxBirthday.text)
+    }
+
+    # Append to the master dataframe
+    all_data_d <- bind_rows(all_data_d, data_d)
+  } else {
+    cat("Skipping file, does not have 'Finish.timesOff' column:", file_path, "\n")
+  }
+}
+```
+
+```{r}
+library(readr)
+library(dplyr)
+
+# Specify the path to your folder
+folder_path <- "/Users/kyliealberts/Desktop/AMS_B2_O"
+
+# List all CSV files in the folder
+csv_files <- list.files(folder_path, pattern = "\\.csv$", full.names = TRUE)
+
+# Function to check if a CSV file has a specific column
+has_verification_code <- function(file_path) {
+  # Read only the first row to check column names
+  data_d_o <- read_csv(file_path, n_max = 1, show_col_types = FALSE)
+  
+  # Check if 'Finish.timesOff' column exists
+  return("Finish.timesOff" %in% colnames(data_d_o))
+}
+
+# Initialize an empty dataframe to store all data
+all_data_d_o <- tibble()
+
+# Loop through files, load and append if it has the column
+for(file_path in csv_files) {
+  if(has_verification_code(file_path)) {
+    # Load the CSV file
+    data_d_o <- read_csv(file_path, show_col_types = FALSE)
+    
+    # Force participant column to character if it exists
+    if ("participant" %in% colnames(data_d_o)) {
+      data_d_o$participant <- as.character(data_d_o$participant)
+      data_d_o$textbox_comp.text <- as.character(data_d_o$textbox_comp.text)
+      data_d_o$textbox_comp_2.text <- as.character(data_d_o$textbox_comp_2.text)
+      data_d_o$bruinID.text <- as.character(data_d_o$bruinID.text)
+      data_d_o$textboxBirthday.text <- as.character(data_d_o$textboxBirthday.text)
+      data_d_o$textboxAge_2.text <- as.character(data_d_o$textboxAge_2.text)
+    }
+
+    # Append to the master dataframe
+    all_data_d_o <- bind_rows(all_data_d_o, data_d_o)
+  } else {
+    cat("Skipping file, does not have 'Finish.timesOff' column:", file_path, "\n")
+  }
+}
+```
+
+```{r}
+#cheat_a <- all_data %>% select(participant, textboxQuestion2.text)
+
+all_data <- all_data %>% select(participant, textbox_comp.text, figure2, Type, type, label2, button_selections_test, textbox_comp_2.text, slider1.response, ss_question, Gender, textboxAge.text)
+
+#all_data$agegroup <- 'Young'
+
+counts_a <- ddply(all_data, .(all_data$participant), nrow)
+names(counts_a) <- c("ID", "Freq")
+
+all_data$textbox_comp.text <- as.numeric(gsub("[^0-9.]", "", all_data$textbox_comp.text))
+
+
+```
+
+```{r}
+#cheat_a <- all_data %>% select(participant, textboxQuestion2.text)
+
+all_data_oa <- all_data_oa %>% select(participant, textbox_comp.text, figure2, Type, type, label2, button_selections_test, textbox_comp_2.text, slider1.response, ss_question, Gender, textboxAge.text)
+
+#all_data$agegroup <- 'Young'
+
+all_data_oa <- subset(all_data_oa, all_data_oa$participant!= "050136")
+	
+
+
+counts_oa <- ddply(all_data_oa, .(all_data_oa$participant), nrow)
+names(counts_oa) <- c("ID", "Freq")
+
+all_data_oa$textbox_comp.text <- as.numeric(gsub("[^0-9.]", "", all_data_oa$textbox_comp.text))
+
+write.csv(all_data_oa, "AMS_AO_excel.csv")
+
+```
+
+```{r}
+all_data_b <- all_data_b %>% select(participant, textbox_comp.text, figure2, Type, type, label2, button_selections_test, textbox_comp_2.text, slider1.response, ss_question, Gender, textboxAge.text)
+
+#all_data_b$agegroup <- 'Young'
+
+all_data_b <- subset(all_data_b, all_data_b$participant!= "880609")
+all_data_b <- subset(all_data_b, all_data_b$participant!= "913352")
+all_data_b <- subset(all_data_b, all_data_b$participant!= "954921")
+all_data_b <- subset(all_data_b, all_data_b$participant!= "958819")
+all_data_b <- subset(all_data_b, all_data_b$participant!= "798294")
+
+counts_b <- ddply(all_data_b, .(all_data_b$participant), nrow)
+names(counts_b) <- c("ID", "Freq")
+
+all_data_b$textbox_comp.text <- as.numeric(gsub("[^0-9.]", "", all_data_b$textbox_comp.text))
+
+```
+
+```{r}
+all_data_b_o <- all_data_b_o %>% select(participant, textbox_comp.text, figure2, Type, type, label2, button_selections_test, textbox_comp_2.text, slider1.response, ss_question, Gender, textboxAge.text)
+
+#all_data_b$agegroup <- 'Young'
+
+all_data_b_o <- subset(all_data_b_o, all_data_b_o$participant!= "891784")
+
+counts_ob <- ddply(all_data_b_o, .(all_data_b_o$participant), nrow)
+names(counts_b) <- c("ID", "Freq")
+
+all_data_b_o$textbox_comp.text <- as.numeric(gsub("[^0-9.]", "", all_data_b_o$textbox_comp.text))
+
+write.csv(all_data_b_o, "AMS_BO_excel.csv")
+```
+
+```{r}
+all_data_c <- all_data_c %>% select(participant, textbox_comp.text, figure2, Type, type, label2, button_selections_test, textbox_comp_2.text, slider1.response, ss_question, Gender, textboxAge.text)
+
+#all_data_c$agegroup <- 'Young'
+
+all_data_c <- subset(all_data_c, all_data_c$participant!= "858967")
+all_data_c <- subset(all_data_c, all_data_c$participant!= "863295")
+all_data_c <- subset(all_data_c, all_data_c$participant!= "872730")
+all_data_c <- subset(all_data_c, all_data_c$participant!= "894714")
+all_data_c <- subset(all_data_c, all_data_c$participant!= "908553")
+all_data_c <- subset(all_data_c, all_data_c$participant!= "971876")
+
+
+counts_c <- ddply(all_data_c, .(all_data_c$participant), nrow)
+names(counts_c) <- c("ID", "Freq")
+
+all_data_c$textbox_comp.text <- as.numeric(gsub("[^0-9.]", "", all_data_c$textbox_comp.text))
+
+
+write.csv(all_data_c, "AMS_C_excel.csv")
+
+```
+
+```{r}
+all_data_c_o <- all_data_c_o %>% select(participant, textbox_comp.text, figure2, Type, type, label2, button_selections_test, textbox_comp_2.text, slider1.response, ss_question, Gender, textboxAge.text)
+
+#all_data_c$agegroup <- 'Young'
+
+#all_data_c <- subset(all_data_c, all_data_c$participant!= "858967")
+
+
+counts_c_o <- ddply(all_data_c, .(all_data_c_o$participant), nrow)
+names(counts_c_o) <- c("ID", "Freq")
+
+all_data_c_o$textbox_comp.text <- as.numeric(gsub("[^0-9.]", "", all_data_c_o$textbox_comp.text))
+
+
+write.csv(all_data_c_o, "AMS_CO_excel.csv")
+
+```
+
+```{r}
+all_data_d <- all_data_d %>% select(participant, textbox_comp.text, figure2, Type, type, label2, button_selections_test, textbox_comp_2.text, slider1.response, ss_question, Gender, textboxAge.text)
+
+#all_data_d$agegroup <- 'Young'
+
+all_data_d <- subset(all_data_d, all_data_d$participant!= "988618")
+all_data_d <- subset(all_data_d, all_data_d$participant!= "989619")
+all_data_d <- subset(all_data_d, all_data_d$participant!= "993377")
+
+
+counts_d <- ddply(all_data_d, .(all_data_d$participant), nrow)
+names(counts_d) <- c("ID", "Freq")
+
+all_data_d$textbox_comp.text <- as.numeric(gsub("[^0-9.]", "", all_data_d$textbox_comp.text))
+
+write.csv(all_data_d, "AMS_D_excel.csv")
+
+```
+
+```{r}
+all_data_d_o <- all_data_d_o %>% select(participant, textbox_comp.text, figure2, Type, type, label2, button_selections_test, textbox_comp_2.text, slider1.response, ss_question, Gender, textboxAge.text)
+
+#all_data_d$agegroup <- 'Young'
+
+all_data_d_o <- subset(all_data_d_o, all_data_d_o$participant!= "227625")
+
+
+counts_d_o <- ddply(all_data_d_o, .(all_data_d_o$participant), nrow)
+names(counts_d_o) <- c("ID", "Freq")
+
+all_data_d_o$textbox_comp.text <- as.numeric(gsub("[^0-9.]", "", all_data_d_o$textbox_comp.text))
+
+write.csv(all_data_d_o, "AMS_DO_excel.csv")
+
+```
+
+```{r}
+#combining data
+all_data <- rbind(all_data, all_data_b)
+all_data <- rbind(all_data, all_data_c)
+all_data <- rbind(all_data, all_data_d)
+all_data$label2 <- gsub("Neurtal", "Neutral", all_data$label2)
+write.csv(all_data, "AMS_all_data_excel.csv")
+```
+
+```{r}
+#combining data
+all_data_o <- rbind(all_data_oa, all_data_b_o)
+all_data_o <- rbind(all_data_o, all_data_c_o)
+all_data_o <- rbind(all_data_o, all_data_d_o)
+all_data_o$label2 <- gsub("Neurtal", "Neutral", all_data_o$label2)
+write.csv(all_data_o, "AMS_all_data_excel_o.csv")
+```
+
+```{r}
+#calculating questionnaires
+all_data_ss_y <- all_data %>% select(participant, slider1.response, ss_question)
+all_data_ss_y <- na.omit(all_data_ss_y)
+
+all_data_ss_y$slider1.response.reverse <- 8 - all_data_ss_y$slider1.response
+
+all_data_ss_y <- all_data_ss_y %>%
+  mutate(
+    ss_answer = case_when(
+      str_detect(ss_question, "65") ~ as.character(slider1.response),
+      str_detect(ss_question, "difficulty") ~ as.character(slider1.response.reverse),
+      str_detect(ss_question, "rings") ~ as.character(slider1.response.reverse),
+      str_detect(ss_question, "something") ~ as.character(slider1.response),
+      str_detect(ss_question, "usually") ~ as.character(slider1.response.reverse),
+      TRUE ~ ""
+    )
+  )
+
+all_data_ss_y <- all_data_ss_y %>%
+  group_by(participant) %>%
+  summarise(total_ss_answer = sum(as.numeric(ss_answer), na.rm = TRUE))
+```
+
+```{r}
+#calculating questionnaires
+all_data_ss_o <- all_data_o %>% select(participant, slider1.response, ss_question)
+all_data_ss_o <- na.omit(all_data_ss_o)
+
+all_data_ss_o$slider1.response.reverse <- 8 - all_data_ss_o$slider1.response
+
+all_data_ss_o <- all_data_ss_o %>%
+  mutate(
+    ss_answer = case_when(
+      str_detect(ss_question, "65") ~ as.character(slider1.response),
+      str_detect(ss_question, "difficulty") ~ as.character(slider1.response.reverse),
+      str_detect(ss_question, "rings") ~ as.character(slider1.response.reverse),
+      str_detect(ss_question, "something") ~ as.character(slider1.response),
+      str_detect(ss_question, "usually") ~ as.character(slider1.response.reverse),
+      TRUE ~ ""
+    )
+  )
+
+all_data_ss_o <- all_data_ss_o %>%
+  group_by(participant) %>%
+  summarise(total_ss_answer = sum(as.numeric(ss_answer), na.rm = TRUE))
+```
+
+```{r}
+#combining data
+all_data <- all_data %>%
+  left_join(all_data_ss_y, by = "participant")
+
+all_data_o <- all_data_o %>%
+  left_join(all_data_ss_o, by = "participant")
+```
+
+
+```{r}
+#age 
+
+all_data_y_age <- all_data %>% select(participant, textboxAge.text) %>% na.omit()
+all_data_o_age <- all_data_o %>% select(participant, textboxAge.text) %>% na.omit()
+
+mean(all_data_y_age$textboxAge.text)
+range(all_data_y_age$textboxAge.text)
+sd(all_data_y_age$textboxAge.text)
+
+mean(all_data_o_age$textboxAge.text)
+range(all_data_o_age$textboxAge.text)
+sd(all_data_o_age$textboxAge.text)
+```
+
+
+```{r}
+# Identify rows with two consecutive NAs in 'figure2'
+all_data$consecutive_na <- is.na(all_data$figure2) & c(is.na(all_data$figure2[-1]), FALSE)
+
+# Filter out rows where there are two consecutive NAs
+df_cleaned <- all_data[!all_data$consecutive_na, ]
+all_data <- df_cleaned
+```
+
+```{r}
+# Identify rows with two consecutive NAs in 'figure2'
+all_data_o$consecutive_na <- is.na(all_data_o$figure2) & c(is.na(all_data_o$figure2[-1]), FALSE)
+
+# Filter out rows where there are two consecutive NAs
+df_cleaned_o <- all_data_o[!all_data_o$consecutive_na, ]
+all_data_o <- df_cleaned_o
+```
+
+```{r}
+#fixing issues with the data formatting
+all_data_small <- all_data %>% select(participant, textbox_comp.text, figure2, Type, type, label2, button_selections_test, textbox_comp_2.text, total_ss_answer)
+
+library(dplyr)
+# Function to tag chunk number per participant
+tag_chunks <- function(df) {
+  df %>%
+    group_by(participant) %>%
+    mutate(
+      chunk = {
+        # chunk id increases every time a row has NA in figure2
+        is_na_row <- is.na(figure2)
+        chunk_id <- cumsum(lag(is_na_row, default = FALSE)) + 1
+        chunk_id
+      }
+    ) %>%
+    ungroup()
+}
+
+
+df_tagged <- tag_chunks(all_data_small) 
+df_tagged <- subset(df_tagged, chunk != 1)
+df_updated <- subset(df_tagged, chunk != 3)
+
+```
+
+```{r}
+all_data_small_o <- all_data_o %>% select(participant, textbox_comp.text, figure2, Type, type, label2, button_selections_test, textbox_comp_2.text, total_ss_answer)
+
+library(dplyr)
+# Function to tag chunk number per participant
+# Function to tag chunk number per participant
+tag_chunks <- function(df) {
+  df %>%
+    group_by(participant) %>%
+    mutate(
+      chunk = {
+        # chunk id increases every time a row has NA in figure2
+        is_na_row <- is.na(figure2)
+        chunk_id <- cumsum(lag(is_na_row, default = FALSE)) + 1
+        chunk_id
+      }
+    ) %>%
+    ungroup()
+}
+
+
+df_tagged_o <- tag_chunks(all_data_small_o)  # Ensure 'chunk' is properly tagged
+df_tagged_o <- subset(df_tagged_o, chunk != 1)
+df_updated_o <- subset(df_tagged_o, chunk != 3)
+
+
+```
+
+```{r}
+#making the lme data ready
+df_honesty <- subset(df_updated, chunk != 4)
+df_honesty <- df_honesty %>%
+  rename(Time = chunk)
+
+df_honesty$Time <- ifelse(df_honesty$Time == 2, "Pre", df_honesty$Time)
+df_honesty$Time <- ifelse(df_honesty$Time == 5, "Post", df_honesty$Time)
+df_honesty <- df_honesty[!is.na(df_honesty$figure2), ]
+
+df_honesty <- df_honesty %>% select(participant, textbox_comp.text, figure2, Type, Time, total_ss_answer)
+
+df_honesty$agegroup <- 'Young'
+```
+
+```{r}
+#making the lme data ready
+df_honesty_o <- subset(df_updated_o, chunk != 4)
+df_honesty_o <- df_honesty_o %>%
+  rename(Time = chunk)
+
+df_honesty_o$Time <- ifelse(df_honesty_o$Time == 2, "Pre", df_honesty_o$Time)
+df_honesty_o$Time <- ifelse(df_honesty_o$Time == 5, "Post", df_honesty_o$Time)
+df_honesty_o <- df_honesty_o[!is.na(df_honesty_o$figure2), ]
+
+df_honesty_o <- df_honesty_o %>% select(participant, textbox_comp.text, figure2, Type, Time, total_ss_answer)
+
+df_honesty_o$agegroup <- 'Older'
+```
+
+```{r}
+#accuracy
+#use this one for lme accuracy
+df_acc <- subset(df_updated, chunk == 4)
+
+df_acc <- df_acc[!is.na(df_acc$figure2), ]
+df_acc <- df_acc %>% select(participant, figure2, label2, type, button_selections_test, total_ss_answer)
+df_acc <- mutate(df_acc, 
+                    Response = if_else(str_detect(df_acc$button_selections_test, "neutral"), "Neutral","Scam")) 
+df_acc <- df_acc %>% select(-button_selections_test)
+df_acc$accurate = ifelse(df_acc$label2 == df_acc$Response, 1,0)
+df_acc <- df_acc %>% select(-Response)
+df_acc$agegroup <- 'Young'
+```
+
+```{r}
+#accuracy
+#use this one for lme accuracy
+df_acc_o <- subset(df_updated_o, chunk == 4)
+
+df_acc_o <- df_acc_o[!is.na(df_acc_o$figure2), ]
+df_acc_o <- df_acc_o %>% select(participant, figure2, label2, type, button_selections_test, total_ss_answer)
+df_acc_o <- mutate(df_acc_o, 
+                    Response = if_else(str_detect(df_acc_o$button_selections_test, "neutral"), "Neutral","Scam")) 
+df_acc_o <- df_acc_o %>% select(-button_selections_test)
+df_acc_o$accurate = ifelse(df_acc_o$label2 == df_acc_o$Response, 1,0)
+df_acc_o <- df_acc_o %>% select(-Response)
+df_acc_o$agegroup <- 'Older'
+```
+
+```{r}
+df_acc_all <- rbind(df_acc, df_acc_o)
+```
+
+
+```{r}
+#use this for lme for honesty
+df_joined <- merge(df_honesty, df_acc, by = c("participant", "figure2", "agegroup"), all.x = TRUE)
+df_joined$label2[is.na(df_joined$label2)] <- "None"
+df_joined <- filter(df_joined, textbox_comp.text < 11)
+df_joined <- subset(df_joined, !is.na(textbox_comp.text))
+```
+
+```{r}
+#use this for lme for honesty
+df_joined_o <- merge(df_honesty_o, df_acc_o, by = c("participant", "figure2", "agegroup"), all.x = TRUE)
+df_joined_o$label2[is.na(df_joined_o$label2)] <- "None"
+df_joined_o <- filter(df_joined_o, textbox_comp.text < 11)
+df_joined_o <- subset(df_joined_o, !is.na(textbox_comp.text))
+```
+
+```{r}
+df_joined_all <- rbind(df_joined, df_joined_o)
+```
+
+
+```{r}
+#use this for confidence
+df_con <- subset(df_updated, chunk == 4)
+df_con <- df_con[!is.na(df_con$figure2), ]
+df_con <- df_con %>% select(participant, figure2, label2, button_selections_test, textbox_comp_2.text, type)
+df_con <- mutate(df_con, 
+                    Response = if_else(str_detect(df_con$button_selections_test, "neutral"), "Neutral","Scam")) 
+df_con <- df_con %>% select(-button_selections_test)
+df_con$accurate = ifelse(df_con$label2 == df_con$Response, 1,0) 
+df_con <- df_con %>% select(-Response)
+df_con$agegroup <- 'Young'
+
+df_con$textbox_comp_2.text <- as.numeric(gsub("[^0-9.]", "", df_con$textbox_comp_2.text))
+```
+
+```{r}
+#use this for confidence
+df_con_o <- subset(df_updated_o, chunk == 4)
+df_con_o <- df_con_o[!is.na(df_con_o$figure2), ]
+df_con_o <- df_con_o %>% select(participant, figure2, label2, button_selections_test, textbox_comp_2.text, type)
+df_con_o <- mutate(df_con_o, 
+                    Response = if_else(str_detect(df_con_o$button_selections_test, "neutral"), "Neutral","Scam")) 
+df_con_o <- df_con_o %>% select(-button_selections_test)
+df_con_o$accurate = ifelse(df_con_o$label2 == df_con_o$Response, 1,0) 
+df_con_o <- df_con_o %>% select(-Response)
+df_con_o$agegroup <- 'Older'
+
+df_con_o$textbox_comp_2.text <- as.numeric(gsub("[^0-9.]", "", df_con_o$textbox_comp_2.text))
+```
+
+```{r}
+df_con_all <- rbind(df_con, df_con_o)
+df_con_all <- subset(df_con_all, !is.na(textbox_comp_2.text))
+df_con_all <- filter(df_con_all, textbox_comp_2.text < 11)
+```
+
+
+```{r}
+#use for accurate only
+df_accurate_only <- subset(df_joined, accurate == 1)
+df_accurate_only_o <- subset(df_joined_o, accurate == 1)
+
+df_accurate_only_all <- rbind(df_accurate_only, df_accurate_only_o)
+```
+
+```{r}
+#use for inaccurate only
+df_inaccurate_only <- subset(df_joined, accurate != 1)
+df_inaccurate_only_o <- subset(df_joined_o, accurate != 1)
+
+df_inaccurate_only_all <- rbind(df_inaccurate_only, df_inaccurate_only_o)
+
+write_csv(df_inaccurate_only_all, "df_inaccurate_ams_a.csv")
+```
+
+```{r}
+#honesty model
+df_joined_all$label2 <- as.factor(df_joined_all$label2)
+df_joined_all$Time <- as.factor(df_joined_all$Time)
+df_joined_all$Type <- as.factor(df_joined_all$Type)
+df_joined_all$agegroup <- as.factor(df_joined_all$agegroup)
+df_joined_all$participant <- as.factor(df_joined_all$participant)
+df_joined_all$figure2 <- as.factor(df_joined_all$figure2)
+
+df_joined_all <- df_joined_all %>% select(-total_ss_answer.y)
+
+names(df_joined_all)[names(df_joined_all) == "total_ss_answer.x"] <- "total_ss_answer"
+
+df_joined_all$total_ss_answer <- as.numeric(as.character(df_joined_all$total_ss_answer))
+
+
+honesty_model <- lmer(textbox_comp.text ~ label2 * Time * Type * agegroup + (1 | participant) + (1|figure2), data = df_joined_all)
+summary(honesty_model)
+
+```
+
+```{r}
+
+# Install and load emmeans 
+library(emmeans)
+
+
+emmeans_type <- emmeans(honesty_model, pairwise ~ label2)
+summary(emmeans_type)
+
+emmeans_age <- emmeans(honesty_model, pairwise ~ agegroup)
+summary(emmeans_age)
+
+emmeans_type2 <- emmeans(honesty_model, pairwise ~ Type)
+summary(emmeans_type2)
+
+# Post-hoc comparisons for 
+emmeans_label_time <- emmeans(honesty_model, pairwise ~ label2 * Time)
+summary(emmeans_label_time)
+
+# Post-hoc comparisons for 
+emmeans_label_type <- emmeans(honesty_model, pairwise ~ label2 * Type)
+summary(emmeans_label_type)
+
+
+# Interaction effects for 
+emmeans_interaction_t_a <- emmeans(honesty_model, ~ pairwise ~ agegroup * Type)
+summary(emmeans_interaction_t_a)
+
+# Pairwise comparisons within each interaction level
+emmeans_pairwise_interaction <- emmeans(honesty_model, pairwise ~ label2 * Time * Type)
+summary(emmeans_pairwise_interaction)
+
+```
+
+```{r}
+#young
+average_honesty_j_young <- df_joined %>% 
+  group_by(participant, label2, Time, Type) %>% summarise_at(vars(textbox_comp.text), list(textbox_comp.text = mean))
+
+write.csv(average_honesty_j_young, "df_joined_jamovi_y.csv")
+```
+
+```{r}
+average_honesty_j_o <- df_joined_o %>% 
+  group_by(participant, label2, Time, Type) %>% summarise_at(vars(textbox_comp.text), list(textbox_comp.text = mean))
+
+write.csv(average_honesty_j_o, "df_joined_jamovi_o.csv")
+```
+
+```{r}
+##creating graph for honesty ratings
+stand_honesty <- data.frame(
+  label2=c("Neutral", "Neutral", "Neutral", "Neutral", "Scam", "Scam", "Scam", "Scam", "None", "None", "None", "None"),
+  Time = c("Pre", "Pre", "Post", "Post", "Pre", "Pre", "Post", "Post", "Pre", "Pre", "Post", "Post"),
+  Type = c("artificial", "real","artificial", "real","artificial", "real","artificial", "real","artificial", "real","artificial", "real"),
+  sd=c(.156, .121, .181, .150, .160, .136, .167, .170, .171, .128, .191, .151)
+)
+df_joined$textbox_comp.text <- as.numeric(df_joined$textbox_comp.text)
+
+average_honesty <- df_joined %>% 
+  group_by(label2, Time, Type, agegroup) %>% summarise_at(vars(textbox_comp.text), list(textbox_comp.text = mean))
+
+average_honesty_young <- average_honesty %>% subset(agegroup == "Young")
+
+average_honesty_young$Time <- factor(average_honesty_young$Time, levels = c("Pre", "Post"))
+average_honesty_young$Type <- factor(average_honesty_young$Type, levels = c("real", "artificial"))
+average_honesty_young$label2 <- factor(average_honesty_young$label2, levels = c("Scam", "Neutral", "None"))
+
+average_honesty_young<- merge(average_honesty_young, stand_honesty, by=c("label2","Time", "Type"))
+
+average_honesty_young$Type <- gsub("artificial", "Artificial", average_honesty_young$Type)
+average_honesty_young$Type <- gsub("real", "Real", average_honesty_young$Type)
+average_honesty_young$Type <- factor(average_honesty_young$Type, levels = c("Real", "Artificial"))
+
+annotation_hy <- data.frame(
+  x = c(1.75, 2, 2, 1, 1),
+  y = c(6.25, 4.75, 4.75, 6, 6),
+  label = c("***", "***", "***", "*", "***"),
+  label2 = c("Neutral", "None", "Scam", "Neutral", "Scam")  # Must match facet variable!
+)
+annotation_hy$label2 <- factor(annotation_hy$label2, levels = c("Scam", "Neutral", "None"))
+
+segment_df_hy <- data.frame(
+  x = c(1.25, 1.75, 1.75, .75, .75),            # "real" is at x=1 (left bar)
+  xend = c(2.25, 2.25, 2.25, 1.25, 1.25),         # "artificial" is at x=2 (right bar)
+  y = c(6, 4.5, 4.5, 5.75, 5.75),         # vertical position of line
+  yend = c(6, 4.5, 4.5, 5.75, 5.75),
+  label2 = c("Neutral", "None", "Scam", "Neutral", "Scam")
+)
+
+
+segment_df_hy$label2 <- factor(segment_df_hy$label2, levels = c("Scam", "Neutral", "None"))
+
+figure_honesty1_bw <- ggplot(data = average_honesty_young, 
+                             aes(x = Type, y = textbox_comp.text, fill = Time)) +
+  geom_bar(stat = "identity", position = position_dodge(), col = "black") +
+  facet_wrap(~label2) +
+  guides(fill = guide_legend(reverse = FALSE, direction = "horizontal")) +  # 🔹 horizontal
+  labs(x = " ", y = "Honesty Rating") +
+  theme_classic(base_family = "Times New Roman") +
+  theme(
+    text = element_text(size = 16),
+    panel.background = element_rect(fill = 'transparent'),
+    legend.position = c(0.85, 0.8),   # 🔹 inside panel
+    legend.background = element_rect(fill = "white", color = NA), # optional box
+    legend.key = element_blank(),
+    axis.line.x = element_line(color = "black", size = .3),
+    axis.line.y = element_line(color = "black", size = .3),
+    axis.ticks.x = element_blank()
+  ) +
+  scale_fill_manual(values = c("black", "white"), name = "") +
+  geom_errorbar(aes(ymin = textbox_comp.text - sd, ymax = textbox_comp.text + sd),
+                width = 0.2, colour = "gray27", position = position_dodge(.9)) +
+  ylim(0, 10)
+
+figure_honesty1_bw
+
+```
+
+```{r}
+#graph with significance bars
+average_honesty_young$Study_type <- interaction(average_honesty_young$label2, average_honesty_young$Type)
+
+# Step 2: Define the desired order
+desired_order <- c("Scam.Real", "Scam.Artificial", "Neutral.Real", "Neutral.Artificial", "None.Real", "None.Artificial")  # adjust as needed
+
+# Step 3: Convert to factor with specific order
+average_honesty_young$Study_type <- factor(average_honesty_young$Study_type, levels = desired_order)
+
+
+figure_honesty1_bw <- ggplot(data=average_honesty_young, aes(x = Study_type, y=textbox_comp.text, fill=Time)) +
+geom_bar(stat="identity", position=position_dodge(), col = "black")+
+  guides(fill = guide_legend(reverse = FALSE)) +
+  labs(x = " ",y = "Honesty Rating") +
+  theme(text=element_text(size=16,  family="Times New Roman"), panel.background = element_rect(fill='transparent'),legend.direction = "horizontal",legend.position = c(0.6, 0.8), axis.line.x = element_line(color="black", size = .3), axis.line.y = element_line(color="black", size = .3), axis.ticks.x=element_blank())+
+  scale_fill_manual(values = c("black", "white"),name="")+ 
+theme_classic() +
+  geom_errorbar(aes(ymin=textbox_comp.text-sd, ymax=textbox_comp.text+sd), width=0.2, colour="gray27", position=position_dodge(.9)) +
+  ylim(0,10)+
+   scale_x_discrete(labels = function(x) gsub("\\.", " - ", x))+
+  
+  annotate("text", x = 2, y = 4.5, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 1.8, xend = 2.2, y = 4.5, yend = 4.5), color = "black", size = .3)+
+  
+  annotate("text", x = 6, y = 4.5, label = "**", size = 6, color = "black") +
+  geom_segment(aes(x = 5.8, xend = 6.2, y = 4.5, yend = 4.5), color = "black", size = .3)+
+
+  annotate("text", x = 3, y = 5.8, label = "*", size = 6, color = "black") +
+  geom_segment(aes(x = 2.8, xend = 3.2, y = 5.8, yend = 5.8), color = "black", size = .3)+
+  
+  annotate("text", x = 1, y = 5.5, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = .8, xend = 1.2, y = 5.5, yend = 5.5), color = "black", size = .3) +
+  
+  annotate("text", x = 1.3, y = 6, label = "*", size = 6, color = "black") +
+  geom_segment(aes(x = .8, xend = 1.8, y = 6, yend = 6), color = "black", size = .3) +
+  
+  annotate("text", x = 3.7, y = 6.5, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 3.2, xend = 4.2, y = 6.5, yend = 6.5), color = "black", size = .3)+
+  
+  annotate("text", x = 2.2, y = 7, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 1.2, xend = 3.2, y = 7, yend = 7), color = "black", size = .3) +
+  
+  annotate("text", x = 3.2, y = 7.5, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 2.2, xend = 4.2, y = 7.5, yend = 7.5), color = "black", size = .3)+
+  
+  annotate("text", x = 3.2, y = 8, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 1.2, xend = 5.2, y = 8, yend = 8), color = "black", size = .3)
+
+###need to change the one significance marker that shows that neutral is increasing
+figure_honesty1_bw
+```
+```{r}
+#creating lollipop graph 
+average_honesty_young$study_type <- paste(average_honesty_young$label2, average_honesty_young$Type, sep = " ")
+
+average_honesty_young$study_type_time <- paste(average_honesty_young$study_type, average_honesty_young$Time, sep = " ")
+
+desired_order <- c("Scam Real Pre", "Scam Real Post", "Scam Artificial Pre", "Scam Artificial Post", "Neutral Real Pre", "Neutral Real Post", "Neutral Artificial Pre", "Neutral Artificial Post", "None Real Pre", "None Real Post", "None Artificial Pre", "None Artificial Post")  # adjust as needed
+
+# Step 3: Convert to factor with specific order
+average_honesty_young$study_type_time <- factor(average_honesty_young$study_type_time, levels = desired_order)
+
+figure_honesty1_bw_y <- ggplot(data=average_honesty_young, aes(x = study_type_time, y=textbox_comp.text, color = study_type_time)) +
+  geom_segment(aes(x = study_type_time, xend = study_type_time, 
+                 y = 0, yend = textbox_comp.text), linewidth = 1)+
+  geom_point(size=4)+
+  labs(x = " ",y = "Honesty Rating") +
+  theme_classic(base_family = "Times New Roman") +
+  theme(
+    text = element_text(size = 12),
+    panel.background = element_rect(fill = 'transparent'),
+    legend.position = "none",
+    axis.line.x = element_line(color = "black", size = .3),
+    axis.line.y = element_line(color = "black", size = .3),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )+
+  scale_color_manual(values = c(
+    "Scam Real Pre" = "cadetblue3",
+    "Scam Real Post" = "cadetblue3",
+    "Scam Artificial Pre" = "cadetblue3",
+    "Scam Artificial Post" = "cadetblue3",
+    "Neutral Real Pre" = "cadetblue4",
+    "Neutral Real Post" = "cadetblue4",
+    "Neutral Artificial Pre" = "cadetblue4",
+    "Neutral Artificial Post" = "cadetblue4",
+    "None Real Pre" = "cadetblue2",
+    "None Real Post" = "cadetblue2",
+    "None Artificial Pre" = "cadetblue2",
+    "None Artificial Post" = "cadetblue2"
+  )) +
+  ylim(0,10)
+   
+###need to change the one significance marker that shows that neutral is increasing
+figure_honesty1_bw_y
+```
+
+
+```{r}
+#creating final honesty graph
+stand_honesty_o <- data.frame(
+  label2=c("Neutral", "Neutral", "Neutral", "Neutral", "Scam", "Scam", "Scam", "Scam", "None", "None", "None", "None"),
+  Time = c("Pre", "Pre", "Post", "Post", "Pre", "Pre", "Post", "Post", "Pre", "Pre", "Post", "Post"),
+  Type = c("artificial", "real","artificial", "real","artificial", "real","artificial", "real","artificial", "real","artificial", "real"),
+  sd=c(.145, .138, .144, .163, .149, .138, .171, .175, .128, .126, .170, .139)
+)
+df_joined_o$textbox_comp.text <- as.numeric(df_joined_o$textbox_comp.text)
+
+average_honesty_o <- df_joined_o %>% 
+  group_by(label2, Time, Type, agegroup) %>% summarise_at(vars(textbox_comp.text), list(textbox_comp.text = mean))
+
+
+
+average_honesty_o <- average_honesty_o %>% subset(agegroup == "Older")
+
+average_honesty_o$Time <- factor(average_honesty_o$Time, levels = c("Pre", "Post"))
+average_honesty_o$Type <- factor(average_honesty_o$Type, levels = c("real", "artificial"))
+average_honesty_o$label2 <- factor(average_honesty_o$label2, levels = c("Scam", "Neutral", "None"))
+
+average_honesty_o <- merge(average_honesty_o, stand_honesty_o, by=c("label2","Time", "Type"))
+
+average_honesty_o$Type <- gsub("artificial", "Artificial", average_honesty_o$Type)
+average_honesty_o$Type <- gsub("real", "Real", average_honesty_o$Type)
+average_honesty_o$Type <- factor(average_honesty_o$Type, levels = c("Real", "Artificial"))
+
+annotation_ho <- data.frame(
+  x = c(1.75, 2, 2, 1, 1),
+  y = c(6.25, 6.25, 5.4, 6, 5.75),
+  label = c("***", "***", "***", "*", "***"),
+  label2 = c("Neutral", "None", "Scam", "Neutral", "Scam")  # Must match facet variable!
+)
+annotation_ho$label2 <- factor(annotation_ho$label2, levels = c("Scam", "Neutral", "None"))
+
+segment_df_ho <- data.frame(
+  x = c(1.25, 1.75, 1.75, .75, .75),            # "real" is at x=1 (left bar)
+  xend = c(2.25, 2.25, 2.25, 1.25, 1.25),         # "artificial" is at x=2 (right bar)
+  y = c(6.25, 6.25, 5.4, 6, 5.75),         # vertical position of line
+  yend = c(6.25, 6.25, 5.4, 6, 5.75),
+  label2 = c("Neutral", "None", "Scam", "Neutral", "Scam")
+)
+
+segment_df_ho$label2 <- factor(segment_df_ho$label2, levels = c("Scam", "Neutral", "None"))
+
+figure_honesty1_bw_o <- ggplot(data = average_honesty_o, 
+                             aes(x = Type, y = textbox_comp.text, fill = Time)) +
+  geom_bar(stat = "identity", position = position_dodge(), col = "black") +
+  facet_wrap(~label2) +
+  guides(fill = guide_legend(reverse = FALSE, direction = "horizontal")) +  # 🔹 horizontal
+  labs(x = " ", y = "Honesty Rating") +
+  theme_classic(base_family = "Times New Roman") +
+  theme(
+    text = element_text(size = 16),
+    panel.background = element_rect(fill = 'transparent'),
+    legend.position = c(0.85, 0.8),   # 🔹 inside panel
+    legend.background = element_rect(fill = "white", color = NA), # optional box
+    legend.key = element_blank(),
+    axis.line.x = element_line(color = "black", size = .3),
+    axis.line.y = element_line(color = "black", size = .3),
+    axis.ticks.x = element_blank()
+  ) +
+  scale_fill_manual(values = c("black", "white"), name = "") +
+  geom_errorbar(aes(ymin = textbox_comp.text - sd, ymax = textbox_comp.text + sd),
+                width = 0.2, colour = "gray27", position = position_dodge(.9)) +
+  ylim(0, 10)
+
+figure_honesty1_bw_o
+```
+```{r}
+#older adult lollipop graph
+average_honesty_o$study_type <- paste(average_honesty_o$label2, average_honesty_o$Type, sep = " ")
+
+average_honesty_o$study_type_time <- paste(average_honesty_o$study_type, average_honesty_o$Time, sep = " ")
+
+desired_order <- c("Scam Real Pre", "Scam Real Post", "Scam Artificial Pre", "Scam Artificial Post", "Neutral Real Pre", "Neutral Real Post", "Neutral Artificial Pre", "Neutral Artificial Post", "None Real Pre", "None Real Post", "None Artificial Pre", "None Artificial Post")  # adjust as needed
+
+# Step 3: Convert to factor with specific order
+average_honesty_o$study_type_time <- factor(average_honesty_o$study_type_time, levels = desired_order)
+
+figure_honesty1_bw_o <- ggplot(data=average_honesty_o, aes(x = study_type_time, y=textbox_comp.text, color = study_type_time)) +
+  geom_segment(aes(x = study_type_time, xend = study_type_time, 
+                 y = 0, yend = textbox_comp.text), linewidth = 1)+
+  geom_point(size=4)+
+  labs(x = " ",y = "Honesty Rating") +
+  theme_classic(base_family = "Times New Roman") +
+  theme(
+    text = element_text(size = 12),
+    panel.background = element_rect(fill = 'transparent'),
+    legend.position = "none",
+    axis.line.x = element_line(color = "black", size = .3),
+    axis.line.y = element_line(color = "black", size = .3),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )+
+  scale_color_manual(values = c(
+    "Scam Real Pre" = "cadetblue3",
+    "Scam Real Post" = "cadetblue3",
+    "Scam Artificial Pre" = "cadetblue3",
+    "Scam Artificial Post" = "cadetblue3",
+    "Neutral Real Pre" = "cadetblue4",
+    "Neutral Real Post" = "cadetblue4",
+    "Neutral Artificial Pre" = "cadetblue4",
+    "Neutral Artificial Post" = "cadetblue4",
+    "None Real Pre" = "cadetblue2",
+    "None Real Post" = "cadetblue2",
+    "None Artificial Pre" = "cadetblue2",
+    "None Artificial Post" = "cadetblue2"
+  )) +
+  ylim(0,10)
+   
+###need to change the one significance marker that shows that neutral is increasing
+figure_honesty1_bw_o
+```
+
+```{r}
+#older adult lollipop graph
+average_honesty_o$study_type <- paste(average_honesty_o$label2, average_honesty_o$Type, sep = " ")
+
+average_honesty_o$study_type_time <- paste(average_honesty_o$study_type, average_honesty_o$Time, sep = " ")
+
+desired_order <- c("Scam Real Pre", "Scam Real Post", "Scam Artificial Pre", "Scam Artificial Post", "Neutral Real Pre", "Neutral Real Post", "Neutral Artificial Pre", "Neutral Artificial Post", "None Real Pre", "None Real Post", "None Artificial Pre", "None Artificial Post")  # adjust as needed
+
+# Step 3: Convert to factor with specific order
+average_honesty_o$study_type_time <- factor(average_honesty_o$study_type_time, levels = desired_order)
+
+figure_honesty1_bw_o <- ggplot(data=average_honesty_o, aes(x = study_type_time, y=textbox_comp.text, color = study_type_time)) +
+  geom_segment(aes(x = study_type_time, xend = study_type_time, 
+                 y = 0, yend = textbox_comp.text), linewidth = 1)+
+  geom_point(size=4)+
+  labs(x = " ",y = "Honesty Rating") +
+  theme_classic(base_family = "Times New Roman") +
+  theme(
+    text = element_text(size = 12),
+    panel.background = element_rect(fill = 'transparent'),
+    legend.position = "none",
+    axis.line.x = element_line(color = "black", size = .3),
+    axis.line.y = element_line(color = "black", size = .3),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )+
+  scale_color_manual(values = c(
+    "Scam Real Pre" = "cadetblue3",
+    "Scam Real Post" = "cadetblue3",
+    "Scam Artificial Pre" = "cadetblue3",
+    "Scam Artificial Post" = "cadetblue3",
+    "Neutral Real Pre" = "cadetblue4",
+    "Neutral Real Post" = "cadetblue4",
+    "Neutral Artificial Pre" = "cadetblue4",
+    "Neutral Artificial Post" = "cadetblue4",
+    "None Real Pre" = "cadetblue2",
+    "None Real Post" = "cadetblue2",
+    "None Artificial Pre" = "cadetblue2",
+    "None Artificial Post" = "cadetblue2"
+  )) +
+  ylim(0,10)
+   
+###need to change the one significance marker that shows that neutral is increasing
+figure_honesty1_bw_o
+```
+
+
+```{r}
+#older adult honesty ratings with significance
+average_honesty_o$Study_type <- interaction(average_honesty_o$label2, average_honesty_o$Type)
+
+
+desired_order_o <- c("Scam.Real", "Scam.Artificial", "Neutral.Real", "Neutral.Artificial", "None.Real", "None.Artificial")  # adjust as needed
+
+
+average_honesty_o$Study_type <- factor(average_honesty_o$Study_type, levels = desired_order_o)
+
+
+figure_honesty1_bw_o <- ggplot(data=average_honesty_o, aes(x = Study_type, y=textbox_comp.text, fill=Time)) +
+geom_bar(stat="identity", position=position_dodge(), col = "black")+
+  guides(fill = guide_legend(reverse = FALSE)) +
+  labs(x = " ", y = "Honesty Rating") +
+  theme(text=element_text(size=16,  family="Times New Roman"), panel.background = element_rect(fill='transparent'),legend.direction = "horizontal",legend.position = c(0.6, 0.8), axis.line.x = element_line(color="black", size = .3), axis.line.y = element_line(color="black", size = .3), axis.ticks.x=element_blank())+
+  scale_fill_manual(values = c("black", "white"),name="")+ 
+theme_classic() +
+  geom_errorbar(aes(ymin=textbox_comp.text-sd, ymax=textbox_comp.text+sd), width=0.2, colour="gray27", position=position_dodge(.9)) +
+  ylim(0,10)+scale_x_discrete(labels = function(x) gsub("\\.", " - ", x))+
+  
+  annotate("text", x = 2, y = 5.3, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 1.8, xend = 2.2, y = 5.3, yend = 5.3), color = "black", size = .3)+
+  
+  annotate("text", x = 6, y = 6, label = "**", size = 6, color = "black") +
+  geom_segment(aes(x = 5.8, xend = 6.2, y = 6, yend = 6), color = "black", size = .3)+
+
+  annotate("text", x = 3, y = 6, label = "*", size = 6, color = "black") +
+  geom_segment(aes(x = 2.8, xend = 3.2, y = 6, yend = 6), color = "black", size = .3)+
+  
+  annotate("text", x = 1, y = 5.8, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = .8, xend = 1.2, y = 5.8, yend = 5.8), color = "black", size = .3) +
+  
+  annotate("text", x = 1.3, y = 6.2, label = "*", size = 6, color = "black") +
+  geom_segment(aes(x = .8, xend = 1.8, y = 6.2, yend = 6.2), color = "black", size = .3) +
+  
+  annotate("text", x = 3.7, y = 6.5, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 3.2, xend = 4.2, y = 6.5, yend = 6.5), color = "black", size = .3)+
+  
+  annotate("text", x = 2.2, y = 7, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 1.2, xend = 3.2, y = 7, yend = 7), color = "black", size = .3) +
+  
+  annotate("text", x = 3.2, y = 7.5, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 2.2, xend = 4.2, y = 7.5, yend = 7.5), color = "black", size = .3)+
+  
+  annotate("text", x = 3.2, y = 8, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 1.2, xend = 5.2, y = 8, yend = 8), color = "black", size = .3)
+
+###need to change the one significance marker that shows that neutral is increasing###
+figure_honesty1_bw_o
+```
+
+```{r}
+#type by age group graph
+stand_honesty_type_age <- data.frame(
+  Type = c("artificial", "artificial","real", "real"),
+  agegroup = c("Older", "Young", "Older", "Young"),
+  sd=c(.0145, .0395, .0419, .0398)
+)
+write.csv(df_joined_all, "df_joined_all_AMS_A.csv")
+average_honesty_type_age <- df_joined_all %>% 
+  group_by(Type, agegroup) %>% summarise_at(vars(textbox_comp.text), list(textbox_comp.text = mean))
+
+average_honesty_type_age$agegroup <- factor(average_honesty_type_age$agegroup, levels = c("Young", "Older"))
+
+average_honesty_type_age <- merge(average_honesty_type_age, stand_honesty_type_age, by=c("Type", "agegroup"))
+
+average_honesty_type_age$Type <- gsub("artificial", "Artificial", average_honesty_type_age$Type)
+average_honesty_type_age$Type <- gsub("real", "Real", average_honesty_type_age$Type)
+average_honesty_type_age$Type <- factor(average_honesty_type_age$Type, levels = c("Real", "Artificial"))
+
+
+figure_honesty_type_age <- ggplot(data=average_honesty_type_age, aes(x = Type, y=textbox_comp.text, fill=agegroup)) +
+geom_bar(stat="identity", position=position_dodge(), col = "black")+
+  guides(fill = guide_legend(reverse = FALSE)) +
+  labs(x = " ", y = "Honesty Rating") +
+  theme(text=element_text(size=16,  family="Times New Roman"), panel.background = element_rect(fill='transparent'),legend.direction = "horizontal",legend.position = c(0.6, 0.8), axis.line.x = element_line(color="black", size = .3), axis.line.y = element_line(color="black", size = .3), axis.ticks.x=element_blank())+
+  scale_fill_manual(values = c("black", "white"),name="")+ 
+theme_classic() +
+  geom_errorbar(aes(ymin=textbox_comp.text-sd, ymax=textbox_comp.text+sd), width=0.2, colour="gray27", position=position_dodge(.9)) +
+  ylim(0,10)+
+  annotate("text", x = 2, y = 6, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 1.8, xend = 2.2, y = 6, yend = 6), color = "black", size = .3)+
+  
+  annotate("text", x = 1, y = 6, label = "*", size = 6, color = "black") +
+  geom_segment(aes(x = .8, xend = 1.2, y = 6, yend = 6), color = "black", size = .3)+
+  
+  annotate("text", x = 1.3, y = 7, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = .8, xend = 1.8, y = 7, yend = 7), color = "black", size = .3)
+  
+  
+
+figure_honesty_type_age
+```
+```{r}
+#collapsed over age
+stand_honesty_all <- data.frame(
+  label2=c("Neutral", "Neutral", "Neutral", "Neutral", "Scam", "Scam", "Scam", "Scam", "None", "None", "None", "None"),
+  Time = c("Pre", "Pre", "Post", "Post", "Pre", "Pre", "Post", "Post", "Pre", "Pre", "Post", "Post"),
+  Type = c("artificial", "real","artificial", "real","artificial", "real","artificial", "real","artificial", "real","artificial", "real"),
+  sd=c(.069, .063, .076, .075, .068, .067, .075, .076, .0698, .064, .0759, .0718)
+)
+
+df_joined_all$textbox_comp.text <- as.numeric(df_joined_all$textbox_comp.text)
+
+average_honesty_all <- df_joined_all %>% 
+  group_by(label2, Time, Type) %>% summarise_at(vars(textbox_comp.text), list(textbox_comp.text = mean))
+
+average_honesty_all$Time <- factor(average_honesty_all$Time, levels = c("Pre", "Post"))
+average_honesty_all$Type <- factor(average_honesty_all$Type, levels = c("real", "artificial"))
+average_honesty_all$label2 <- factor(average_honesty_all$label2, levels = c("Scam", "Neutral", "None"))
+
+average_honesty_all <- merge(average_honesty_all, stand_honesty_all, by=c("label2","Time", "Type"))
+
+average_honesty_all$Type <- gsub("artificial", "Artificial", average_honesty_all$Type)
+average_honesty_all$Type <- gsub("real", "Real", average_honesty_all$Type)
+average_honesty_all$Type <- factor(average_honesty_all$Type, levels = c("Real", "Artificial"))
+
+average_honesty_all$Study_type <- interaction(average_honesty_all$label2, average_honesty_all$Type)
+
+# Step 2: Define the desired order
+desired_order_all <- c("Scam.Real", "Scam.Artificial", "Neutral.Real", "Neutral.Artificial", "None.Real", "None.Artificial")  # adjust as needed
+
+# Step 3: Convert to factor with specific order
+average_honesty_all$Study_type <- factor(average_honesty_all$Study_type, levels = desired_order_all)
+
+
+figure_honesty1_bw_all <- ggplot(data=average_honesty_all, aes(x = Study_type, y=textbox_comp.text, fill=Time)) +
+geom_bar(stat="identity", position=position_dodge(), col = "black")+
+  guides(fill = guide_legend(reverse = FALSE)) +
+  labs(x = " ", y = "Honesty Rating") +
+  theme(text=element_text(size=16,  family="Times New Roman"), panel.background = element_rect(fill='transparent'),legend.direction = "horizontal",legend.position = c(0.6, 0.8), axis.line.x = element_line(color="black", size = .3), axis.line.y = element_line(color="black", size = .3), axis.ticks.x=element_blank())+
+  scale_fill_manual(values = c("black", "white"),name="")+ 
+theme_classic() +
+  geom_errorbar(aes(ymin=textbox_comp.text-sd, ymax=textbox_comp.text+sd), width=0.2, colour="gray27", position=position_dodge(.9)) +
+  ylim(0,10) +
+  
+  annotate("text", x = 2, y = 5.3, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 1.8, xend = 2.2, y = 5.3, yend = 5.3), color = "black", size = .3)+
+  
+  annotate("text", x = 6, y = 6, label = "**", size = 6, color = "black") +
+  geom_segment(aes(x = 5.8, xend = 6.2, y = 6, yend = 6), color = "black", size = .3)+
+
+  annotate("text", x = 1, y = 5.8, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = .8, xend = 1.2, y = 5.8, yend = 5.8), color = "black", size = .3) +
+  
+  annotate("text", x = 1.3, y = 6.2, label = "*", size = 6, color = "black") +
+  geom_segment(aes(x = .8, xend = 1.8, y = 6.2, yend = 6.2), color = "black", size = .3) +
+  
+  annotate("text", x = 3.7, y = 6.5, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 3.2, xend = 4.2, y = 6.5, yend = 6.5), color = "black", size = .3)+
+  
+  annotate("text", x = 2.2, y = 7, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 1.2, xend = 3.2, y = 7, yend = 7), color = "black", size = .3) +
+  
+  annotate("text", x = 3.2, y = 7.5, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 2.2, xend = 4.2, y = 7.5, yend = 7.5), color = "black", size = .3)+
+  
+  annotate("text", x = 3.2, y = 8, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 1.2, xend = 5.2, y = 8, yend = 8), color = "black", size = .3)
+
+
+figure_honesty1_bw_all
+```
+
+
+```{r}
+##accuracy LME
+df_acc_all$label2 <- as.factor(df_acc_all$label2)
+df_acc_all$agegroup <- as.factor(df_acc_all$agegroup)
+df_acc_all$figure2 <- as.factor(df_acc_all$figure2)
+df_acc_all$participant <- as.factor(df_acc_all$participant)
+df_acc_all$type <- as.factor(df_acc_all$type)
+df_acc_all$total_ss_answer <- as.numeric(as.character(df_acc_all$total_ss_answer))
+
+
+df_acc_all$total_ss_answer_c <- scale(df_acc_all$total_ss_answer, center = TRUE, scale = FALSE)
+#accuracy
+accuracy_model <- glmer(accurate ~ label2*type*agegroup + (1 | participant) + (1 | figure2), data = df_acc_all, family = binomial)
+summary(accuracy_model)
+
+```
+
+```{r}
+# Pairwise comparisons within each interaction level
+emmeans_pairwise_aage <- emmeans(accuracy_model, pairwise ~ agegroup, type = "response")
+summary(emmeans_pairwise_aage)
+
+emmeans_pairwise_acc <- emmeans(accuracy_model, pairwise ~ type*agegroup, type = "response")
+summary(emmeans_pairwise_acc)
+
+conf_intervals_int_age <- confint(emmeans_pairwise_aage)
+print(conf_intervals_int_age)
+
+conf_intervals_int <- confint(emmeans_pairwise_acc)
+print(conf_intervals_int)
+```
+
+
+```{r}
+##Accuracy graph
+write.csv(df_acc_all, "accuracy_AMS_A.csv")
+
+stand_accuracy <- data.frame(
+  label2=c("Neutral", "Neutral", "Neutral", "Neutral", "Scam", "Scam", "Scam", "Scam"),
+  agegroup = c("Older", "Older", "Young", "Young", "Older", "Older", "Young", "Young"),
+  type = c("artificial", "real","artificial", "real","artificial", "real","artificial", "real"),
+  sd=c(.0204, .02, .0205, .0187, .0201, .0189, .0196, .0186)
+)
+
+
+average_accuracy <- df_acc_all %>% 
+  group_by(label2, type, agegroup) %>% summarise_at(vars(accurate), list(accurate = mean))
+
+#average_accuracy <- average_accuracy %>% subset(agegroup == "Young")
+
+average_accuracy$type <- factor(average_accuracy$type, levels = c("real", "artificial"))
+average_accuracy$label2 <- factor(average_accuracy$label2, levels = c("Scam", "Neutral"))
+average_accuracy$agegroup <- factor(average_accuracy$agegroup, levels = c("Young", "Older"))
+
+average_accuracy<- merge(average_accuracy, stand_accuracy, by=c("label2","agegroup", "type"))
+average_accuracy$type <- gsub("artificial", "Artificial", average_accuracy$type)
+average_accuracy$type <- gsub("real", "Real", average_accuracy$type)
+average_accuracy$type <- factor(average_accuracy$type, levels = c("Real", "Artificial"))
+
+annotation <- data.frame(
+  x = c(1.5),
+  y = c(.925),
+  label = c("*"),
+  agegroup = c("Young")  # Must match facet variable!
+)
+
+segment_df <- data.frame(
+  x = c(1),            # "real" is at x=1 (left bar)
+  xend = c(2),         # "artificial" is at x=2 (right bar)
+  y = c(0.9),         # vertical position of line
+  yend = c(0.9),
+  agegroup = c("Young")
+)
+
+annotation$agegroup <- factor(annotation$agegroup, levels = c("Young", "Older"))
+segment_df$agegroup <- factor(segment_df$agegroup, levels = c("Young", "Older"))
+
+figure_accuracy1_bw <- ggplot(data = average_accuracy, 
+                              aes(x = type, y = accurate, fill = agegroup)) +
+  geom_bar(stat = "identity", position = position_dodge(), col = "black") +
+  facet_wrap(~label2) +
+  guides(fill = guide_legend(reverse = FALSE, direction = "horizontal")) +
+  labs(x = " ", y = "Proportion Correct") +
+  theme_classic(base_family = "Times New Roman") +
+  theme(
+    text = element_text(size = 16), 
+    panel.background = element_rect(fill = 'transparent'),
+    legend.position = c(0.8, 0.85), 
+    legend.background = element_rect(fill = "white", color = NA),
+    legend.key = element_blank(),
+    axis.line.x = element_line(color = "black", size = .3), 
+    axis.line.y = element_line(color = "black", size = .3),
+    axis.ticks.x = element_blank()
+  ) +
+  scale_fill_manual(values = c("black", "white"), name = "") + 
+  geom_errorbar(aes(ymin = accurate - sd, ymax = accurate + sd), 
+                width = 0.2, colour = "gray27", position = position_dodge(.9)) +
+  ylim(0, 1) 
+
+figure_accuracy1_bw
+```
+
+```{r}
+#accuracy graph with significance bars
+average_accuracy$Study_type <- interaction(average_accuracy$label2, average_accuracy$type)
+
+desired_order <- c("Neutral.Real", "Neutral.Artificial", "Scam.Real", "Scam.Artificial")  # adjust as needed
+
+average_honesty_young$Study_type <- factor(average_honesty_young$Study_type, levels = desired_order)
+
+
+figure_accuracy1_bw <- ggplot(data=average_accuracy, aes(x=Study_type, y=accurate, fill=agegroup)) +
+geom_bar(stat="identity", position=position_dodge(), col = "black")+
+  guides(fill = guide_legend(reverse = FALSE)) +
+  labs(x= " ", y = "Proportion Correct") +
+  theme(text=element_text(size=16,  family="Times New Roman"), panel.background = element_rect(fill='transparent'),legend.direction = "horizontal",legend.position = c(0.6, 0.8), axis.line.x = element_line(color="black", size = .3), axis.line.y = element_line(color="black", size = .3), axis.ticks.x=element_blank())+
+  scale_fill_manual(values = c("black", "white"),name="")+ 
+theme_classic() +
+  #geom_text(data = annotation, aes(x = x, y = y, label = label), color = "black", inherit.aes = FALSE, size = 6)+
+  #annotate("text", x = .8, y = 1, label = "*", size = 6, color = "black") +
+  geom_errorbar(aes(ymin=accurate-sd, ymax=accurate+sd), width=0.2, colour="gray27", position=position_dodge(.9)) +
+  ylim(0,1) +
+  annotate("text", x = 2.8, y = .9, label = "*", size = 6, color = "black") +
+  geom_segment(aes(x = 1.8, xend = 3.8, y = .9, yend = .9), color = "black", size = .3)+
+  scale_x_discrete(labels = function(x) gsub("\\.", " - ", x))
+
+figure_accuracy1_bw
+```
+```{r}
+#accuracy 
+stand_accuracy_ta <- data.frame(
+  agegroup = c("Older", "Older", "Young", "Young"),
+  type = c("Artificial", "Real","Artificial", "Real"),
+  sd=c(.0143, .0139, .0142, .0132)
+)
+
+
+write.csv(df_acc_all, "average_accuracy_type_age.csv")
+
+average_accuracy_type_age <- df_acc_all %>% 
+  group_by(type, agegroup) %>% summarise_at(vars(accurate), list(accurate = mean))
+
+average_accuracy_type_age$agegroup <- factor(average_accuracy_type_age$agegroup, levels = c("Young", "Older"))
+
+average_accuracy_type_age$type <- gsub("artificial", "Artificial", average_accuracy_type_age$type)
+average_accuracy_type_age$type <- gsub("real", "Real", average_accuracy_type_age$type)
+average_accuracy_type_age$type <- factor(average_accuracy_type_age$type, levels = c("Real", "Artificial"))
+
+average_accuracy_type_age<- merge(average_accuracy_type_age, stand_accuracy_ta, by=c("agegroup", "type"))
+
+figure_accuracy1_bw_type_age <- ggplot(data=average_accuracy_type_age, aes(x=type, y=accurate, fill=agegroup)) +
+geom_bar(stat="identity", position=position_dodge(), col = "black")+
+  guides(fill = guide_legend(reverse = FALSE)) +
+  labs(x= " ", y = "Proportion Correct") +
+  theme(text=element_text(size=16,  family="Times New Roman"), panel.background = element_rect(fill='transparent'),legend.direction = "horizontal",legend.position = c(0.6, 0.8), axis.line.x = element_line(color="black", size = .3), axis.line.y = element_line(color="black", size = .3), axis.ticks.x=element_blank())+
+  scale_fill_manual(values = c("black", "white"),name="")+ 
+theme_classic() +
+  geom_errorbar(aes(ymin=accurate-sd, ymax=accurate+sd), width=0.2, colour="gray27", position=position_dodge(.9)) +
+  ylim(0,1) +
+  annotate("text", x = 1.3, y = .8, label = "*", size = 6, color = "black") +
+  geom_segment(aes(x = .78, xend = 1.78, y = .8, yend = .8), color = "black", size = .3)
+
+figure_accuracy1_bw_type_age
+```
+```{r}
+#accuracy lollipop graph
+average_accuracy <- df_acc_all %>% 
+  group_by(label2, type, agegroup) %>% summarise_at(vars(accurate), list(accurate = mean))
+
+average_accuracy$type <- tools::toTitleCase(tolower(average_accuracy$type))
+
+average_accuracy$study_type <- paste(average_accuracy$label2, average_accuracy$type, sep = " ")
+
+average_accuracy$study_type_age <- paste(average_accuracy$study_type, average_accuracy$agegroup, sep = " ")
+
+desired_order <- c("Scam Real Young", "Scam Real Older", "Scam Artificial Young", "Scam Artificial Older", "Neutral Real Young", "Neutral Real Older", "Neutral Artificial Young", "Neutral Artificial Older")  # adjust as needed
+
+
+average_accuracy$study_type_age <- factor(average_accuracy$study_type_age, levels = desired_order)
+
+figure_accuracy1_bw <- ggplot(data = average_accuracy, 
+                              aes(x = study_type_age, y = accurate, color = study_type_age)) +
+  geom_segment(aes(xend = study_type_age, y = 0, yend = accurate), linewidth = 1) +
+  geom_point(size = 4) +
+  guides(color = guide_legend(reverse = FALSE)) +
+  labs(x = " ", y = "Proportion Correct") +
+  theme_classic(base_family = "Times New Roman") +
+  theme(
+    text = element_text(size = 12),
+    panel.background = element_rect(fill = 'transparent'),
+    legend.position = "none",
+    axis.line.x = element_line(color = "black", size = .3),
+    axis.line.y = element_line(color = "black", size = .3),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  ) +
+  scale_color_manual(values = c(
+    "Scam Real Young" = "cadetblue3",
+    "Scam Real Older" = "cadetblue3",
+    "Scam Artificial Young" = "cadetblue3",
+    "Scam Artificial Older" = "cadetblue3",
+    "Neutral Real Young" = "cadetblue4",
+    "Neutral Real Older" = "cadetblue4",
+    "Neutral Artificial Young" = "cadetblue4",
+    "Neutral Artificial Older" = "cadetblue4"
+  )) +
+  ylim(0, 1)
+
+figure_accuracy1_bw
+```
+
+```{r}
+#accuracy lollipop graph
+figure_accuracy1_bw <- ggplot(data = average_accuracy, 
+                              aes(x = study_type_age, y = accurate, color = study_type_age)) +
+  geom_segment(aes(xend = study_type_age, y = 0, yend = accurate), linewidth = 1) +
+  geom_point(size = 4) +
+  guides(color = guide_legend(reverse = FALSE)) +
+  labs(x = " ", y = "Proportion Correct") +
+  theme_classic(base_family = "Times New Roman") +
+  theme(
+    text = element_text(size = 12),
+    panel.background = element_rect(fill = 'transparent'),
+    legend.position = "none",
+    axis.line.x = element_line(color = "black", size = .3),
+    axis.line.y = element_line(color = "black", size = .3),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )  +
+  ylim(0, 1)
+
+figure_accuracy1_bw
+```
+
+
+```{r}
+#confidence model
+df_con_all$label2 <- as.factor(df_con_all$label2)
+df_con_all$type <- as.factor(df_con_all$type)
+df_con_all$agegroup <- as.factor(df_con_all$agegroup)
+df_con_all$participant <- as.factor(df_con_all$participant)
+df_con_all$figure2 <- as.factor(df_con_all$figure2)
+
+confidence_model <- lmer(textbox_comp_2.text ~ label2 * type * agegroup + (1 | participant) + (1|figure2), data = df_con_all)
+summary(confidence_model)
+```
+
+```{r}
+#pairwise comparison
+emmeans_pairwise_age_con <- emmeans(confidence_model, pairwise ~ agegroup)
+summary(emmeans_pairwise_age_con)
+
+emmeans_pairwise_age_label_con <- emmeans(confidence_model, pairwise ~ agegroup*label2)
+summary(emmeans_pairwise_age_label_con)
+
+emmeans_pairwise_age_type_con <- emmeans(confidence_model, pairwise ~ agegroup*type)
+summary(emmeans_pairwise_age_type_con)
+
+```
+
+
+```{r}
+#confidence graph
+write.csv(df_con_all, "confidence_AMS_A.csv")
+#all
+stand_con <- data.frame(
+  label2=c("Neutral", "Neutral", "Neutral", "Neutral", "Scam", "Scam", "Scam", "Scam"),
+  agegroup = c("Older", "Older", "Young", "Young", "Older", "Older", "Young", "Young"),
+  type = c("artificial", "real","artificial", "real","artificial", "real","artificial", "real"),
+  sd=c(.0965, .0981, .114, .115, .0983, .0966, .119, .121)
+)
+#face type and age
+stand_con_ft_age <- data.frame(
+  agegroup = c("Older", "Older", "Young", "Young"),
+  type = c("artificial", "real","artificial", "real"),
+  sd=c(.0718, .0722, .0825, .0834) 
+)
+#all
+average_con <- df_con_all %>% 
+  group_by(label2, type, agegroup) %>% summarise_at(vars(textbox_comp_2.text), list(textbox_comp_2.text = mean))
+
+#ft and age
+average_con_ft <- df_con_all %>% 
+  group_by(type, agegroup) %>% summarise_at(vars(textbox_comp_2.text), list(textbox_comp_2.text = mean))
+
+#average_accuracy <- average_accuracy %>% subset(agegroup == "Young")
+#all
+average_con$type <- factor(average_con$type, levels = c("real", "artificial"))
+average_con$label2 <- factor(average_con$label2, levels = c("Scam", "Neutral"))
+average_con$agegroup <- factor(average_con$agegroup, levels = c("Young", "Older"))
+
+average_con<- merge(average_con, stand_con, by=c("label2","agegroup", "type"))
+average_con$type <- gsub("artificial", "Artificial", average_con$type)
+average_con$type <- gsub("real", "Real", average_con$type)
+average_con$type <- factor(average_con$type, levels = c("Real", "Artificial"))
+
+#ft and age
+average_con_ft$type <- factor(average_con_ft$type, levels = c("real", "artificial"))
+average_con_ft$agegroup <- factor(average_con_ft$agegroup, levels = c("Young", "Older"))
+
+average_con_ft<- merge(average_con_ft, stand_con_ft_age, by=c("agegroup", "type"))
+average_con_ft$type <- gsub("artificial", "Artificial", average_con_ft$type)
+average_con_ft$type <- gsub("real", "Real", average_con_ft$type)
+average_con_ft$type <- factor(average_con_ft$type, levels = c("Real", "Artificial"))
+
+figure_con1_bw <- ggplot(data=average_con_ft, aes(x=type, y=textbox_comp_2.text, fill=agegroup)) +
+geom_bar(stat="identity", position=position_dodge(), col = "black")+
+  guides(fill = guide_legend(reverse = FALSE)) +
+  labs(x= " ", y = "Confidence") +
+  theme(text=element_text(size=16,  family="Times New Roman"), panel.background = element_rect(fill='transparent'),legend.direction = "horizontal",legend.position = c(0.6, 0.8), axis.line.x = element_line(color="black", size = .3), axis.line.y = element_line(color="black", size = .3), axis.ticks.x=element_blank())+
+  scale_fill_manual(values = c("black", "white"),name="")+ 
+theme_classic() +
+  #annotate("text", x = 1, y = 7, label = "***", size = 6, color = "black") +
+  #geom_segment(aes(x = 0.8, xend = 1.2, y = 6.9, yend = 6.9), color = "black", size = .3)+
+  geom_errorbar(aes(ymin=textbox_comp_2.text-sd, ymax=textbox_comp_2.text+sd), width=0.2, colour="gray27", position=position_dodge(.9)) +
+  ylim(0,10) +
+  annotate("text", x = 2, y = 8, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 1.8, xend = 2.2, y = 8, yend = 8), color = "black", size = .3)+
+  annotate("text", x = 1.3, y = 8.5, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = .8, xend = 1.8, y = 8.5, yend = 8.5), color = "black", size = .3)
+
+
+figure_con1_bw
+```
+```{r}
+#con and age
+stand_con_label_age <- data.frame(
+  agegroup = c("Older", "Older", "Young", "Young"),
+  label2 = c("Scam", "Neutral","Scam", "Neutral"),
+  sd=c(.0726, .0715, .0862, .0826)
+)
+
+#con and age
+average_con_con_age <- df_con_all %>% 
+  group_by(label2, agegroup) %>% summarise_at(vars(textbox_comp_2.text), list(textbox_comp_2.text = mean))
+
+#confidence, age x condition
+average_con_con_age$label2 <- factor(average_con_con_age$label2, levels = c("Scam", "Neutral"))
+average_con_con_age$agegroup <- factor(average_con_con_age$agegroup, levels = c("Young", "Older"))
+
+average_con_con_age<- merge(average_con_con_age, stand_con_label_age, by=c("agegroup", "label2"))
+
+figure_con1_bw_labe_age <- ggplot(data=average_con_con_age, aes(x=label2, y=textbox_comp_2.text, fill=agegroup)) +
+geom_bar(stat="identity", position=position_dodge(), col = "black")+
+  guides(fill = guide_legend(reverse = FALSE)) +
+  labs(x= " ", y = "Confidence") +
+  theme(text=element_text(size=16,  family="Times New Roman"), panel.background = element_rect(fill='transparent'),legend.direction = "horizontal",legend.position = c(0.6, 0.8), axis.line.x = element_line(color="black", size = .3), axis.line.y = element_line(color="black", size = .3), axis.ticks.x=element_blank())+
+  scale_fill_manual(values = c("black", "white"),name="")+ 
+theme_classic() +
+  #annotate("text", x = 1, y = 7, label = "***", size = 6, color = "black") +
+  #geom_segment(aes(x = 0.8, xend = 1.2, y = 6.9, yend = 6.9), color = "black", size = .3)+
+  geom_errorbar(aes(ymin=textbox_comp_2.text-sd, ymax=textbox_comp_2.text+sd), width=0.2, colour="gray27", position=position_dodge(.9)) +
+  ylim(0,10) +
+  annotate("text", x = 2, y = 8, label = "**", size = 6, color = "black") +
+  geom_segment(aes(x = 1.8, xend = 2.2, y = 8, yend = 8), color = "black", size = .3)+
+  annotate("text", x = 1.3, y = 8.5, label = "**", size = 6, color = "black") +
+  geom_segment(aes(x = .8, xend = 1.8, y = 8.5, yend = 8.5), color = "black", size = .3)+
+  annotate("text", x = 1, y = 8, label = "*", size = 6, color = "black") +
+  geom_segment(aes(x = .8, xend = 1.2, y = 8, yend = 8), color = "black", size = .3)
+
+
+
+figure_con1_bw_labe_age
+```
+
+
+
+```{r}
+#confidence and age
+average_con$age_type <- interaction(average_con$agegroup, average_con$type)
+
+desired_order_con <- c("Young.Real", "Young.Artificial", "Older.Real", "Older.Artificial")  # adjust as needed
+
+average_con$age_type <- factor(average_con$age_type, levels = desired_order_con)
+
+figure_con1_bw <- ggplot(data=average_con, aes(x=age_type, y=textbox_comp_2.text, fill=label2)) +
+geom_bar(stat="identity", position=position_dodge(), col = "black")+
+  guides(fill = guide_legend(reverse = FALSE)) +
+  labs(x= " ", y = "Confidence") +
+  theme(text=element_text(size=16,  family="Times New Roman"), panel.background = element_rect(fill='transparent'),legend.direction = "horizontal",legend.position = c(0.6, 0.8), axis.line.x = element_line(color="black", size = .3), axis.line.y = element_line(color="black", size = .3), axis.ticks.x=element_blank())+
+  scale_fill_manual(values = c("black", "white"),name="")+ 
+theme_classic() +
+  #annotate("text", x = 1, y = 7, label = "***", size = 6, color = "black") +
+  #geom_segment(aes(x = 0.8, xend = 1.2, y = 6.9, yend = 6.9), color = "black", size = .3)+
+  geom_errorbar(aes(ymin=textbox_comp_2.text-sd, ymax=textbox_comp_2.text+sd), width=0.2, colour="gray27", position=position_dodge(.9)) +
+  ylim(0,10)+
+  
+  annotate("text", x = 1.5, y = 8, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 1, xend = 2, y = 8, yend = 8), color = "black", size = .3)+
+  
+  annotate("text", x = 3, y = 8.5, label = "***", size = 6, color = "black") +
+  geom_segment(aes(x = 2, xend = 4, y = 8.5, yend = 8.5), color = "black", size = .3)+
+  
+  scale_x_discrete(labels = function(x) gsub("\\.", " - ", x))
+
+
+figure_con1_bw
+```
+
+
+```{r}
+##accurate only honesty graph
+df_accurate_only_all$label2 <- as.factor(df_accurate_only_all$label2)
+df_accurate_only_all$Time <- as.factor(df_accurate_only_all$Time)
+df_accurate_only_all$Type <- as.factor(df_accurate_only_all$Type)
+df_accurate_only_all$agegroup <- as.factor(df_accurate_only_all$agegroup)
+df_accurate_only_all$participant <- as.factor(df_accurate_only_all$participant)
+df_accurate_only_all$figure2 <- as.factor(df_accurate_only_all$figure2)
+
+honesty_acc_model <- lmer(textbox_comp.text ~ label2 * Time * Type * agegroup + (1 | participant) + (1|figure2), data = df_accurate_only_all)
+summary(honesty_acc_model)
+```
+
+```{r}
+#pairwise comparisons
+emmeans_label_acc <- emmeans(honesty_acc_model, pairwise ~ label2)
+summary(emmeans_label_acc)
+
+emmeans_age_acc <- emmeans(honesty_acc_model, pairwise ~ agegroup)
+summary(emmeans_age_acc)
+
+emmeans_Type_acc <- emmeans(honesty_acc_model, pairwise ~ Type)
+summary(emmeans_Type_acc)
+
+# Post-hoc comparisons for 
+emmeans_label_time_acc <- emmeans(honesty_acc_model, pairwise ~ label2 * Time)
+summary(emmeans_label_time_acc)
+
+# Post-hoc comparisons for 
+emmeans_label_type_acc <- emmeans(honesty_acc_model, pairwise ~ label2 * Type)
+summary(emmeans_label_type_acc)
+
+emmeans_label_age_acc <- emmeans(honesty_acc_model, pairwise ~ label2 * agegroup)
+summary(emmeans_label_age_acc)
+
+
+# Interaction effects for 
+emmeans_interaction_t_a_acc <- emmeans(honesty_acc_model, ~ pairwise ~ agegroup * Type)
+summary(emmeans_interaction_t_a_acc)
+
+# Pairwise comparisons within each interaction level
+emmeans_pairwise_interaction_acc <- emmeans(honesty_acc_model, pairwise ~ label2 * Time * Type)
+summary(emmeans_pairwise_interaction_acc)
+
+emmeans_pairwise_interaction_acc_lta <- emmeans(honesty_acc_model, pairwise ~ label2 * Time * agegroup)
+summary(emmeans_pairwise_interaction_acc_lta)
+```
+
+```{r}
+#lme for innaccurate results only
+df_inaccurate_only_all$label2 <- as.factor(df_inaccurate_only_all$label2)
+df_inaccurate_only_all$Time <- as.factor(df_inaccurate_only_all$Time)
+df_inaccurate_only_all$Type <- as.factor(df_inaccurate_only_all$Type)
+df_inaccurate_only_all$agegroup <- as.factor(df_inaccurate_only_all$agegroup)
+df_inaccurate_only_all$participant <- as.factor(df_inaccurate_only_all$participant)
+df_inaccurate_only_all$figure2 <- as.factor(df_inaccurate_only_all$figure2)
+
+honesty_inacc_model <- lmer(textbox_comp.text ~ label2 * Time * Type * agegroup + (1 | participant) + (1|figure2), data = df_inaccurate_only_all)
+summary(honesty_inacc_model)
+```
+
+```{r}
+#pairwise comparisons
+emmeans_label_inacc <- emmeans(honesty_inacc_model, pairwise ~ label2)
+summary(emmeans_label_inacc)
+
+emmeans_time_inacc <- emmeans(honesty_inacc_model, pairwise ~ Time)
+summary(emmeans_time_inacc)
+
+emmeans_agegroup_inacc <- emmeans(honesty_inacc_model, pairwise ~ agegroup)
+summary(emmeans_agegroup_inacc)
+
+emmeans_type_agegroup_inacc <- emmeans(honesty_inacc_model, pairwise ~ Type*agegroup)
+summary(emmeans_type_agegroup_inacc)
+```
+```{r}
+#accuracy and confidence
+library(purrr)
+library(cocor)
+
+df_con_all %>%
+  group_by(agegroup, participant) %>%
+  summarise(
+    mean_textbox = mean(textbox_comp_2.text, na.rm = TRUE),
+    mean_accurate = mean(accurate, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  group_by(agegroup) %>%
+  group_split() %>%
+  map_df(~{
+    result <- cor.test(~ mean_textbox + mean_accurate, data = .x)
+    tibble(
+      agegroup = unique(.x$agegroup),
+      correlation = result$estimate,
+      p_value = result$p.value,
+      df = result$parameter 
+    )
+  })
+
+df_avg <- df_con_all %>%
+  group_by(agegroup, participant) %>%
+  summarise(
+    mean_textbox = mean(textbox_comp_2.text, na.rm = TRUE),
+    mean_accurate = mean(accurate, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+df_avg$agegroup <- factor(df_avg$agegroup, levels = c("Young", "Older"))
+
+# Plot the data
+ggplot(df_avg, aes(x = mean_accurate, y = mean_textbox, color = agegroup)) +
+  geom_point(alpha = 0.7, size = 3) +
+  geom_smooth(method = "lm", se = TRUE, fullrange = TRUE) +
+  facet_wrap(~ agegroup) +
+  theme_classic() +
+  labs(
+    title = "",
+    x = "Accuracy",
+    y = "Confidence",
+    color = "Age Group"
+  ) 
+  #theme_minimal(base_size = 14)
+
+```
+
+```{r}
+#inaccurate graph
+stand_honesty_in <- data.frame(
+  label2=c("Neutral", "Neutral", "Neutral", "Neutral", "Scam", "Scam", "Scam", "Scam"),
+  Time = c("Pre", "Pre", "Post", "Post", "Pre", "Pre", "Post", "Post"),
+  Type = c("artificial", "real","artificial", "real","artificial", "real","artificial", "real"),
+  sd=c(.143, .166, .151, .185, .164, .160, .170, .166)
+)
+df_inaccurate_only_all$textbox_comp.text <- as.numeric(df_inaccurate_only_all$textbox_comp.text)
+
+average_inaccurate <- df_inaccurate_only_all %>% 
+  group_by(label2, Time, Type, agegroup) %>% summarise_at(vars(textbox_comp.text), list(textbox_comp.text = mean))
+
+
+
+average_inaccurate <- average_inaccurate %>% subset(agegroup == "Young")
+
+average_inaccurate$Time <- factor(average_inaccurate$Time, levels = c("Pre", "Post"))
+average_inaccurate$Type <- factor(average_inaccurate$Type, levels = c("real", "artificial"))
+average_inaccurate$label2 <- factor(average_inaccurate$label2, levels = c("Scam", "Neutral", "None"))
+
+average_inaccurate <- merge(average_inaccurate, stand_honesty_in, by=c("label2","Time", "Type"))
+
+average_inaccurate$Type <- gsub("artificial", "Artificial", average_inaccurate$Type)
+average_inaccurate$Type <- gsub("real", "Real", average_inaccurate$Type)
+average_inaccurate$Type <- factor(average_inaccurate$Type, levels = c("Real", "Artificial"))
+
+
+figure_inaccurate <- ggplot(data = average_inaccurate, 
+                             aes(x = Type, y = textbox_comp.text, fill = Time)) +
+  geom_bar(stat = "identity", position = position_dodge(), col = "black") +
+  facet_wrap(~label2) +
+  guides(fill = guide_legend(reverse = FALSE, direction = "horizontal")) +  # 🔹 horizontal
+  labs(x = " ", y = "Honesty Rating") +
+  theme_classic(base_family = "Times New Roman") +
+  theme(
+    text = element_text(size = 16),
+    panel.background = element_rect(fill = 'transparent'),
+    legend.position = c(0.85, 0.8),   # 🔹 inside panel
+    legend.background = element_rect(fill = "white", color = NA), # optional box
+    legend.key = element_blank(),
+    axis.line.x = element_line(color = "black", size = .3),
+    axis.line.y = element_line(color = "black", size = .3),
+    axis.ticks.x = element_blank()
+  ) +
+  scale_fill_manual(values = c("black", "white"), name = "") +
+  geom_errorbar(aes(ymin = textbox_comp.text - sd, ymax = textbox_comp.text + sd),
+                width = 0.2, colour = "gray27", position = position_dodge(.9)) +
+  ylim(0, 10)
+
+figure_inaccurate
+```
+
+```{r}
+#inaccurate only older adults
+stand_honesty_in_o <- data.frame(
+  label2=c("Neutral", "Neutral", "Neutral", "Neutral", "Scam", "Scam", "Scam", "Scam"),
+  Time = c("Pre", "Pre", "Post", "Post", "Pre", "Pre", "Post", "Post"),
+  Type = c("artificial", "real","artificial", "real","artificial", "real","artificial", "real"),
+  sd=c(.159, .147, .166, .187, .147, .182, .179, .190)
+)
+df_inaccurate_only_all$textbox_comp.text <- as.numeric(df_inaccurate_only_all$textbox_comp.text)
+
+average_inaccurate <- df_inaccurate_only_all %>% 
+  group_by(label2, Time, Type, agegroup) %>% summarise_at(vars(textbox_comp.text), list(textbox_comp.text = mean))
+
+
+
+average_inaccurate_o <- average_inaccurate %>% subset(agegroup == "Older")
+
+average_inaccurate_o$Time <- factor(average_inaccurate_o$Time, levels = c("Pre", "Post"))
+average_inaccurate_o$Type <- factor(average_inaccurate_o$Type, levels = c("real", "artificial"))
+average_inaccurate_o$label2 <- factor(average_inaccurate_o$label2, levels = c("Scam", "Neutral", "None"))
+
+average_inaccurate_o <- merge(average_inaccurate_o, stand_honesty_in_o, by=c("label2","Time", "Type"))
+
+average_inaccurate_o$Type <- gsub("artificial", "Artificial", average_inaccurate_o$Type)
+average_inaccurate_o$Type <- gsub("real", "Real", average_inaccurate_o$Type)
+average_inaccurate_o$Type <- factor(average_inaccurate_o$Type, levels = c("Real", "Artificial"))
+
+
+figure_inaccurate_o <- ggplot(data = average_inaccurate_o, 
+                             aes(x = Type, y = textbox_comp.text, fill = Time)) +
+  geom_bar(stat = "identity", position = position_dodge(), col = "black") +
+  facet_wrap(~label2) +
+  guides(fill = guide_legend(reverse = FALSE, direction = "horizontal")) +  # 🔹 horizontal
+  labs(x = " ", y = "Honesty Rating") +
+  theme_classic(base_family = "Times New Roman") +
+  theme(
+    text = element_text(size = 16),
+    panel.background = element_rect(fill = 'transparent'),
+    legend.position = c(0.85, 0.8),   # 🔹 inside panel
+    legend.background = element_rect(fill = "white", color = NA), # optional box
+    legend.key = element_blank(),
+    axis.line.x = element_line(color = "black", size = .3),
+    axis.line.y = element_line(color = "black", size = .3),
+    axis.ticks.x = element_blank()
+  ) +
+  scale_fill_manual(values = c("black", "white"), name = "") +
+  geom_errorbar(aes(ymin = textbox_comp.text - sd, ymax = textbox_comp.text + sd),
+                width = 0.2, colour = "gray27", position = position_dodge(.9)) +
+  ylim(0, 10)
+
+figure_inaccurate_o
+```
+
+
+

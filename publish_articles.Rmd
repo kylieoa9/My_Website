@@ -14,6 +14,26 @@ output:
 <br>
 
 <div style = "text-align: center; max-width: 600px; margin: 0 auto;">
+## Spot the Scam: Identifying Email Scams and Scam Susceptibility in Younger and Older Adults
+</div>
+
+<div style = "text-align: center;">
+[<img src="files_/scam_image_article.png" width="400" class="hover-img">](files_/scam_article.pdf)
+</div>
+
+<br>
+
+<div style = "text-align: center; max-width: 600px; margin: 0 auto;">
+## Memory and Curiosity for Free Grocery Items and Price in Younger and Older Adults
+</div>
+
+<div style = "text-align: center;">
+[<img src="files_/grocery_image.png" width="400" class="hover-img">](files_/grocery_article.pdf)
+</div>
+
+<br>
+
+<div style = "text-align: center; max-width: 600px; margin: 0 auto;">
 ## Associative Memory and Trustworthiness of Artificial Faces in Young and Older Adults
 </div>
 
