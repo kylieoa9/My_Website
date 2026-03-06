@@ -7,7 +7,7 @@ output:
 ---
 
 <div class="banner">
-  <h1>Data Science Projects</h1>
+  <h1 style="text-align: center;">Data Science Projects</h1>
 </div>
 
 ## California Wildfire Project

@@ -7,7 +7,7 @@ output:
 ---
 
 <div class="banner">
-  <h1>Published Articles</h1>
+  <h1 style="text-align: center;">Published Article</h1>
 </div>
 
 <br>

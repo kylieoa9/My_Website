@@ -7,17 +7,24 @@ output:
 ---
 
 <div class="banner">
-  <h1>Code Examples</h1>
+  <h1 style="text-align: center;">Code Examples</h1>
 </div>
 
-## California Wildfire Project Code (click on image)
+## California Wildfire Project R Code (click on image)
 <div style = "text-align: center;">
 [<img src="files_/EED_pic.png" width="400" class="hover-img">](Final_Project_Alberts_code.html)
 </div>
 
 <br> 
 
-## Memory for Free Code (click on image)
+## Boggle Game Python Code (click on image)
+<div style = "text-align: center;">
+[<img src="files_/boggle_image.png" width="400" class="hover-img">](files_/Python_Code_Boggle.pdf)
+</div>
+
+<br> 
+
+## Memory for Free R Code (click on image)
 <div style = "text-align: center;">
 [<img src="files_/free_graph_pic.png" width="400" class="hover-img">](artificial_faces_code.html)
 </div>

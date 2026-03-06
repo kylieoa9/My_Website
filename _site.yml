@@ -9,8 +9,6 @@ navbar:
   right:
     - text: "Home"
       href: index.html
-    - text: "About Me"
-      href: about.html
     - text: "Resume"
       href: resume.html
     - text: "Data Science Projects"  
